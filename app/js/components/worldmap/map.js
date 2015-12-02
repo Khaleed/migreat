@@ -64,9 +64,14 @@ d3.json(worldMap, json => {
 });
 
 // zooming and panning a map
+// behaviour acts as event listeners
 let zoom = d3.behavior.zoom()
     .on("zoom", () => {
-    	g.attr("transform","translate("+
+    	countries.attr("transform","translate("+
     		d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+    	countries.selectAll("path")
+    	    .attr("d", path.projection(projection));
     });
+
+    svg.call(zoom);
 
