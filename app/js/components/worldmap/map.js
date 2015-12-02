@@ -1,10 +1,10 @@
 'use strict';
 
-let d3 = require('d3');
+let d3 = require('d3/d3.js');
 // turn GeoJSON into screen coordinates
 // the result is not tied down to a particular tiled map
-require('d3-geo-projection')(d3); // d3.geo will contain all extended pieces
-let worldMap = require('../../../../data/world_map.json')
+require('d3-geo-projection/d3.geo.projection.js'); // d3.geo will contain all extended pieces
+let worldMap = require('../../../../data/world_map.json');
 let topojson = require('topojson');
 // define size of the map
 let width = 1000,
@@ -64,7 +64,7 @@ d3.json(worldMap, json => {
 });
 
 // zooming and panning a map
-// behaviour acts as event listeners
+// d3/behavior acts as event listeners
 let zoom = d3.behavior.zoom()
     .on("zoom", () => {
     	countries.attr("transform","translate("+
@@ -73,5 +73,4 @@ let zoom = d3.behavior.zoom()
     	    .attr("d", path.projection(projection));
     });
 
-    svg.call(zoom);
-
+svg.call(zoom);
