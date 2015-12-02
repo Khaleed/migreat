@@ -68,8 +68,9 @@ let svgCentroids = svg.selectAll('circle')
 	.data(countriesJSON)
   	.enter()
 	.append('circle')
-	.attr('cx', d => d3.geo.centroid(d)[0])
-	.attr('cy', d => d3.geo.centroid(d)[1])
+	.attr('cx', d => path.centroid(d)[0])
+	.attr('cy', d => path.centroid(d)[1])
+	.attr('r', 1);
 
 // zooming and panning a map
 // d3/behavior acts as event listeners
