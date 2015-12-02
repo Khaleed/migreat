@@ -1,7 +1,7 @@
 var path = require('path')
 
 module.exports = {
-   
+
     devtool: 'source-map',
 
     entry: './app/js/app.js',
@@ -11,11 +11,11 @@ module.exports = {
         publicPath: '/',
         filename: 'bundle.js'
     },
-    
+
     devServer: {
         contentBase: "public/"
     },
-        
+
     node: {
         fs: "empty"
     },
@@ -27,7 +27,12 @@ module.exports = {
                 test: /\.jsx?$/,
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel'
-            }, 
+            },
+
+            // {
+            //     test: /\.s?css$/,
+            //     loaders: ["style", "css", "sass"]
+            // },
 
             {
                 test: /\.json$/,
@@ -36,7 +41,7 @@ module.exports = {
             }
         ]
     },
-    
+
     resolve: {
         extensions: ['.js', '.json', '.jsx', '']
     }

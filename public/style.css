@@ -4,7 +4,7 @@ body path #boundary {
     margin: 0;
 }
 
-path {
+#countries path {
     stroke: #999;
     fill: #eee;
 }
@@ -13,3 +13,4 @@ path {
     fill: #f2f9ff;
     stroke: none;
 }
+
