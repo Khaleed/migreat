@@ -1,0 +1,15 @@
+body path #boundary {
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+
+path {
+    stroke: #999;
+    fill: #eee;
+}
+
+#boundary path {
+    fill: #f2f9ff;
+    stroke: none;
+}

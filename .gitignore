@@ -1,0 +1,7 @@
+envs
+node_modules/
+*.csv
+*.json
+.awspublish*
+npm-debug.log
+.DS_Store
