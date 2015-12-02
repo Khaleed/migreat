@@ -6,6 +6,7 @@ let d3 = require('d3');
 require('d3-geo-projection/d3.geo.projection.js'); // d3.geo will contain all extended pieces
 let worldMap = require('../../../../data/test-world-map.json');
 let topojson = require('topojson');
+// let isoCountries = require('npm i i18n-iso-countries');
 // define size of the map
 let width = 1000,
 	height = 600;
@@ -62,6 +63,13 @@ var countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).featu
 		// then append that data as paths
 		.append("path")
 		.attr("d", path);
+
+let svgCentroids = svg.selectAll('circle')
+	.data(countriesJSON)
+  	.enter()
+	.append('circle')
+	.attr('cx', d => d3.geo.centroid(d)[0])
+	.attr('cy', d => d3.geo.centroid(d)[1])
 
 // zooming and panning a map
 // d3/behavior acts as event listeners
