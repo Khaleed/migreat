@@ -18,7 +18,6 @@ let svg = d3.select("body")
 
 // let boundary = svg.append("g")  // don't why this is here
 // 	.attr("id", "boundary");
- 
 let countries = svg.append("g")
 	.attr("id", "countries");
 
@@ -32,23 +31,22 @@ let projection = d3.geo.mercator()
 // path generator to identify a project type
 let path = d3.geo.path()
 	.projection(projection);
-// add boundaries
-let boundaryFeature = {
-	type: "Feature",
-	geometry: {
-		type: "Polygon",
-		coordinates: [
-			[
-				[-180, 89.99],
-				[180, 89.99],
-				[180, -89.99],
-				[-180, -89.99],
-				[-180, 89.99]
-			]
-		]
-	}
-}
-
+// // add boundaries
+// let boundaryFeature = {
+// 	type: "Feature",
+// 	geometry: {
+// 		type: "Polygon",
+// 		coordinates: [
+// 			[
+// 				[-180, 89.99],
+// 				[180, 89.99],
+// 				[180, -89.99],
+// 				[-180, -89.99],
+// 				[-180, 89.99]
+// 			]
+// 		]
+// 	}
+// }
 var countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).features;
 // draw the map by loading world map coordinates in the form of JSON
 	// boundary
@@ -72,14 +70,14 @@ let svgCentroids = svg.selectAll('circle')
 	.attr('cy', d => path.centroid(d)[1])
 	.attr('r', 1);
 
-// zooming and panning a map
-// d3/behavior acts as event listeners
-// let zoom = d3.behavior.zoom()
-//     .on("zoom", () => {
-//     	countries.attr("transform","translate("+
-//     		d3.event.translate.join(",")+")scale("+d3.event.scale+")");
-//     	countries.selectAll("path")
-//     	    .attr("d", path.projection(projection));
-//     });
+//zooming and panning a map
+// d3/behavior act as event listeners
+let zoom = d3.behavior.zoom()
+    .on("zoom", () => {
+    	countries.attr("transform","translate("+
+    		d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+    	countries.selectAll("path")
+    	    .attr("d", path.projection(projection));
+    });
 
-// svg.call(zoom);
+svg.call(zoom);
