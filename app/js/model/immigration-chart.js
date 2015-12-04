@@ -12,6 +12,11 @@ let data = [4, 8, 15, 16, 23, 42];
 //    .style('color', 'black')
 //    .style('background-color', 'blue');
 
+// a function that returns scaled display value
+// e.g. inout of 4 returns 40
+let x = d3.scale.linear()
+    .domain([0, d3.max(data)])
+    .range([0, 420]);
 // first select the chart container
 d3.select('.chart')
   // initiate  data by defining the selection we will join data
@@ -23,12 +28,13 @@ d3.select('.chart')
   // 
   .append('div')
   // each bar chart is now bound to the data
-  .style('width', d => {
+  .style('width', function(d) {
   	// set dimensions of each bar based on its data
   	// to complete width of each bar
-  	return d * 10 + "px";
+  	return x(d) + "px";
   })
   // produce a label
   .text(d => {
   	return d;
   });
+
