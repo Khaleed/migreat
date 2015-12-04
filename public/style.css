@@ -9,7 +9,7 @@ path {
     fill: #eee;
 }*/
 
-/*.country {
+.country {
   fill: #b8b8b8;
   stroke: #fff;
   stroke-width: .5px;
@@ -34,7 +34,7 @@ text {
   font-size: 18px;
   font-weight: bold;
   text-anchor: middle;
-}*/
+}
 
 /*path {
     fill: #f2f9ff;
@@ -42,7 +42,7 @@ text {
 }
 */
 
-.bar {
+./*bar {
   fill: steelblue;
 }
 
@@ -64,5 +64,5 @@ text {
 .x.axis path {
   display: none;
 }
-
+*/
 
