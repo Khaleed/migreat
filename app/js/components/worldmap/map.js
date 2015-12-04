@@ -53,12 +53,12 @@ let svgCentroids = svg.selectAll('circle')
 
 //zooming and panning a map
 // d3/behavior act as event listeners
-let zoom = d3.behavior.zoom()
-    .on("zoom", () => {
-    	countries.attr("transform","translate("+
-    		d3.event.translate.join(",")+")scale("+d3.event.scale+")");
-    	countries.selectAll("path")
-    	    .attr("d", path.projection(projection));
-    });
+// let zoom = d3.behavior.zoom()
+//     .on("zoom", () => {
+//     	countries.attr("transform","translate("+
+//     		d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+//     	countries.selectAll("path")
+//     	    .attr("d", path.projection(projection));
+//     });
 
-svg.call(zoom);
+// svg.call(zoom);

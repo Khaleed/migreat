@@ -1,20 +1,20 @@
-/*body path #boundary {
+body path {
     padding: 0;
     border: 0;
     margin: 0;
 }
 
-#countries path {
+path {
     stroke: #999;
     fill: #eee;
 }
 
-#boundary path {
+/*path {
     fill: #f2f9ff;
     stroke: none;
-}*/
-
-.chart div {
+}
+*/
+/*.chart div {
   font: 10px sans-serif;
   background-color: steelblue;
   text-align: right;
@@ -27,4 +27,4 @@
 	fill: white;
 	font: 10px sans-serif;
 	text-anchor: end;
-}
+}*/
