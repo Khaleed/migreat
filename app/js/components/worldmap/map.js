@@ -6,10 +6,16 @@ let d3 = require('d3');
 require('d3-geo-projection/d3.geo.projection.js'); // d3.geo will contain all extended pieces
 let worldMap = require('../../../../data/test-world-map.json');
 let topojson = require('topojson');
+
 // let isoCountries = require('npm i i18n-iso-countries');
 // define size of the map
 let width = 1000,
 	height = 600;
+// 
+let centroid = d3.geo.path()
+    .projection(function(d) { return d; })
+    .centroid;
+
 // set svg window
 let svg = d3.select("body")
 	.append("svg")
@@ -18,45 +24,88 @@ let svg = d3.select("body")
 
 // let boundary = svg.append("g")  // don't why this is here
 // 	.attr("id", "boundary");
-let countries = svg.append("g")
-	.attr("id", "countries");
+// let countries = svg.append("g")
+// 	.attr("id", "countries");
 
 //set up the view of the map
 let projection = d3.geo.orthographic()
 	.scale(248)
 	.clipAngle(90)
-// path generator to identify a project type
+	// path generator to identify a project type
 let path = d3.geo.path()
 	.projection(projection);
 // }
 let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).features;
 // draw the map by loading world map coordinates in the form of topoJSON
-	// act on the all path elems in the graphic
-	countries.selectAll("path")
-		.data(countriesJSON)
-		// add it to data that is being displayed
-		.enter()
-		// then append that data as paths
-		.append("path")
-		.attr("d", path);
+// act on the all path elems in the graphic
+// countries.selectAll("path")
+// 	.data(countriesJSON)
+// 	// add it to data that is being displayed
+// 	.enter()
+// 	// then append that data as paths
+// 	.append("path")
+// 	.attr("d", path);
 
-// alternative for finding centroids
-// let getCentroid = selection => {
-//     get the DOM element from a D3 selection
-//     you could also use "this" inside .each()
-//     let element = selection.node(),
-//         use the native SVG interface to get the bounding box
-//         bbox = element.getBBox();
-//     return the center of the bounding box
-//     return [bbox.x + bbox.width/2, bbox.y + bbox.height/2];
-// }
-// problems with getting centroids from
-// projections
-let svgCentroids = svg.selectAll('circle')
+// let svgCentroids = svg.selectAll('circle')
+// 	.data(countriesJSON)
+// 	.enter()
+// 	.append('circle')
+// 	.attr('cx', d => path.centroid(d)[0])
+// 	.attr('cy', d => path.centroid(d)[1])
+// 	.attr('r', 1);
+// Returns a MultiLineString geometry object 
+// representing all meridians and parallels for this graticule.
+let graticule = d3.geo.graticule()
+	.extent([
+		[-180, -90],
+		[180 - .1, 90 - .1]
+	]);
+
+// line
+let line = svg.append('path')
+	.datum(graticule)
+	.attr('class', 'graticule')
+	.attr('d', path)
+
+let title = svg.append("text")
+	.attr("x", width / 2)
+	.attr("y", height * 3 / 5);
+
+let country = svg.selectAll(".destination-country")
 	.data(countriesJSON)
-  	.enter()
-	.append('circle')
-	.attr('cx', d => path.centroid(d)[0])
-	.attr('cy', d => path.centroid(d)[1])
-	.attr('r', 1);
+	.enter()
+	.insert('path', ".graticule")
+	.attr('class', 'destination-country')
+	.attr('d', path);
 
+let i = -1;
+let n = countriesJSON.length;
+
+// helper step function from Bostock
+let step = function step() {
+	if (++i >= n) i = 0;
+
+	title.text(countriesJSON[i].id);
+
+	country.transition()
+		.style("fill", function(d, j) {
+			return j === i ? "red" : "#b8b8b8";
+		});
+
+	d3.transition()
+		.delay(250)
+		.duration(1250)
+		.tween("rotate", function() {
+			var point = centroid(countriesJSON[i]),
+				rotate = d3.interpolate(projection.rotate(), [-point[0], -point[1]]);
+			return function(t) {
+				projection.rotate(rotate(t));
+				country.attr("d", path);
+				line.attr("d", path);
+			};
+		})
+		.transition()
+		.each("end", step);
+}
+
+step();
