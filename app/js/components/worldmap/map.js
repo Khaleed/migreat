@@ -6,6 +6,7 @@ let d3 = require('d3');
 require('d3-geo-projection/d3.geo.projection.js'); // d3.geo will contain all extended pieces
 let worldMap = require('../../../../data/test-world-map.json');
 let topojson = require('topojson');
+let isoCountries = require("i18n-iso-countries");
 
 // let isoCountries = require('npm i i18n-iso-countries');
 // define size of the map
