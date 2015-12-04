@@ -3,58 +3,85 @@
 let d3 = require('d3');
 
 // let data = [4, 8, 15, 16, 23, 42];
+let margin = {
+	top: 20,
+	right: 30,
+	bottom: 30,
+	left: 40
+};
 
-let width = 960;
-let height = 500;
+let width = 960 - margin.left - margin.right;
+let height = 500 - margin.top - margin.bottom;
 
 // a function that returns scaled display value
 // e.g. input of 4 returns 40
-let y = d3.scale.linear()		// map from an input domain to an output range
+
+let x = d3.scale.ordinal()
+	.rangeRoundBands([0, width], .1);
+
+let y = d3.scale.linear() // map from an input domain to an output range
 	.range([height, 0]);
 
+let xAxis = d3.svg.axis()
+	.scale(x)
+	.orient('bottom');
+
+let yAxis = d3.svg.axis()
+	.scale(y)
+	.orient('left')
+	.ticks(10, "%");
+
 let chart = d3.select('.chart')
-	.attr('width', width)
-	.attr('height', height);
+	.attr('width', width + margin.left + margin.right)
+	.attr('height', height + margin.top + margin.bottom)
+	.append('g')
+	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 function coerceDataType(d) {
-	d.value = parseInt(d.value, 10); // coerce to number
+	d.frequency = +d.frequency; // coerce to number
 	return d;
 }
 
-d3.tsv("dummydata.tsv", coerceDataType, (error, data) => {
+d3.tsv("letterdata.tsv", coerceDataType, (error, data) => {
 
-	let barWidth = width/ data.length;
+	x.domain(data.map(d => {
+		return d.letter;
+	}));
 
 	y.domain([0, d3.max(data, d => {
 		console.log("d", d);
-		return d.value;
+		return d.frequency;
 	})]);
 
-	let bar = chart.selectAll('g')
+	chart.append('g')
+		.attr('class', "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
+
+	chart.append('g')
+		.attr('class', "y axis")
+		.call(yAxis)
+		.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Frequency");
+
+	chart.selectAll(".bar")
 		.data(data)
 		.enter()
-		.append('g')
-		.attr('transform', (d, i) => { // d = data   and i = index
-			return "translate(" + i * barWidth + ",0)"; // position the bars one after the other
+		.append('rect')
+		.attr('class', 'bar')
+		.attr('x', d => {
+			return x(d.letter);
+		})
+		.attr('width', x.rangeBand())
+		.attr('y', d => {
+			return y(d.frequency);
+		})
+		.attr('height', d => {
+			return height - y(d.frequency)
 		});
 
-    bar.append('rect')
-       .attr('y',d => {
-       	    return y(d.value);
-       })
-       .attr('height', function (d) {
-      	return height - y(d.value);
-       }) // don't understand usage of x and -1  //?
-       .attr('width', barWidth-1);
-
-    bar.append('text')
-       .attr('y', d => {
-       	    return y(d.value) + 3;
-       })
-       .attr('x', barWidth / 2)  //?
-       // indicates the off-set in the y-coordinate
-       .attr('dy', '.75em')
-       .text(d => {
-       		return d.name + " " + d.value
-       	});
 });
