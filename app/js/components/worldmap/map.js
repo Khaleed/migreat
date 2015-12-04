@@ -23,7 +23,7 @@ let countries = svg.append("g")
 
 //set up the view of the map
 let projection = d3.geo.mercator()
-	.scale(90)
+	.scale(170)
 	// center(longitude, latitude)
 	.center([0, 27])
 	.rotate([-100, 0])
