@@ -22,17 +22,14 @@ let countries = svg.append("g")
 	.attr("id", "countries");
 
 //set up the view of the map
-let projection = d3.geo.mercator()
-	.scale(170)
-	// center(longitude, latitude)
-	.center([0, 27])
-	.rotate([-100, 0])
-	.translate([width / 2, height / 2]);
+let projection = d3.geo.orthographic()
+	.scale(248)
+	.clipAngle(90)
 // path generator to identify a project type
 let path = d3.geo.path()
 	.projection(projection);
 // }
-var countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).features;
+let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).features;
 // draw the map by loading world map coordinates in the form of topoJSON
 	// act on the all path elems in the graphic
 	countries.selectAll("path")
@@ -43,6 +40,18 @@ var countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).featu
 		.append("path")
 		.attr("d", path);
 
+// alternative for finding centroids
+// let getCentroid = selection => {
+//     get the DOM element from a D3 selection
+//     you could also use "this" inside .each()
+//     let element = selection.node(),
+//         use the native SVG interface to get the bounding box
+//         bbox = element.getBBox();
+//     return the center of the bounding box
+//     return [bbox.x + bbox.width/2, bbox.y + bbox.height/2];
+// }
+// problems with getting centroids from
+// projections
 let svgCentroids = svg.selectAll('circle')
 	.data(countriesJSON)
   	.enter()
@@ -51,14 +60,3 @@ let svgCentroids = svg.selectAll('circle')
 	.attr('cy', d => path.centroid(d)[1])
 	.attr('r', 1);
 
-//zooming and panning a map
-// d3/behavior act as event listeners
-// let zoom = d3.behavior.zoom()
-//     .on("zoom", () => {
-//     	countries.attr("transform","translate("+
-//     		d3.event.translate.join(",")+")scale("+d3.event.scale+")");
-//     	countries.selectAll("path")
-//     	    .attr("d", path.projection(projection));
-//     });
-
-// svg.call(zoom);
