@@ -1,9 +1,4 @@
-"use strict";
-// practice learning d3 charts
-let d3 = require('d3');
-
 // let data = [4, 8, 15, 16, 23, 42];
-
 let width = 420;
 let barHeight = 20;
 

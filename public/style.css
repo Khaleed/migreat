@@ -9,7 +9,7 @@ path {
     fill: #eee;
 }*/
 
-.country {
+/*.country {
   fill: #b8b8b8;
   stroke: #fff;
   stroke-width: .5px;
@@ -34,25 +34,23 @@ text {
   font-size: 18px;
   font-weight: bold;
   text-anchor: middle;
-}
-
+}*/
 
 /*path {
     fill: #f2f9ff;
     stroke: none;
 }
 */
-/*.chart div {
-  font: 10px sans-serif;
-  background-color: steelblue;
-  text-align: right;
-  padding: 3px;
-  margin: 1px;
-  color: white;
+
+.chart rect {
+  fill: steelblue;
 }
 
 .chart text {
-	fill: white;
-	font: 10px sans-serif;
-	text-anchor: end;
-}*/
+  fill: white;
+  font: 10px sans-serif
+  text-anchor: end;
+}
+
+
+
