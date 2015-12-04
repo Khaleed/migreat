@@ -4,16 +4,17 @@ let d3 = require('d3');
 
 // let data = [4, 8, 15, 16, 23, 42];
 
-let width = 420;
-let barHeight = 20;
+let width = 960;
+let height = 500;
 
 // a function that returns scaled display value
 // e.g. input of 4 returns 40
-let x = d3.scale.linear()		// map from an input domain to an output range
-	.range([0, width]);
+let y = d3.scale.linear()		// map from an input domain to an output range
+	.range([height, 0]);
 
 let chart = d3.select('.chart')
-	.attr('width', width);
+	.attr('width', width)
+	.attr('height', height);
 
 function coerceDataType(d) {
 	d.value = parseInt(d.value, 10); // coerce to number
@@ -21,35 +22,38 @@ function coerceDataType(d) {
 }
 
 d3.tsv("dummydata.tsv", coerceDataType, (error, data) => {
-	console.log(data);
-	x.domain([0, d3.max(data, d => {
+
+	let barWidth = width/ data.length;
+
+	y.domain([0, d3.max(data, d => {
 		console.log("d", d);
 		return d.value;
-	})]); //?
-
-	chart.attr('height', barHeight * data.length);
+	})]);
 
 	let bar = chart.selectAll('g')
 		.data(data)
 		.enter()
 		.append('g')
 		.attr('transform', (d, i) => { // d = data   and i = index
-			return "translate(0," + i * barHeight + ")"; // position the bars one after the other
+			return "translate(" + i * barWidth + ",0)"; // position the bars one after the other
 		});
 
     bar.append('rect')
-       .attr('width', function (d) {
-       	return x(d.value);
+       .attr('y',d => {
+       	    return y(d.value);
+       })
+       .attr('height', function (d) {
+      	return height - y(d.value);
        }) // don't understand usage of x and -1  //?
-       .attr('height', barHeight-1);
+       .attr('width', barWidth-1);
 
     bar.append('text')
-       .attr('x', d => {
-       	    x(d.value) - 3;
+       .attr('y', d => {
+       	    return y(d.value) + 3;
        })
-       .attr('y', barHeight / 2)  //?
+       .attr('x', barWidth / 2)  //?
        // indicates the off-set in the y-coordinate
-       .attr('dy', '.35em')
+       .attr('dy', '.75em')
        .text(d => {
        		return d.name + " " + d.value
        	});
