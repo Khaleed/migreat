@@ -1,4 +1,4 @@
-body path #boundary {
+/*body path #boundary {
     padding: 0;
     border: 0;
     margin: 0;
@@ -12,5 +12,13 @@ body path #boundary {
 #boundary path {
     fill: #f2f9ff;
     stroke: none;
-}
+}*/
 
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}

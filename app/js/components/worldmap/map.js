@@ -23,7 +23,7 @@ let countries = svg.append("g")
 
 //set up the view of the map
 let projection = d3.geo.mercator()
-	.scale(120)
+	.scale(90)
 	// center(longitude, latitude)
 	.center([0, 27])
 	.rotate([-100, 0])
@@ -31,28 +31,9 @@ let projection = d3.geo.mercator()
 // path generator to identify a project type
 let path = d3.geo.path()
 	.projection(projection);
-// // add boundaries
-// let boundaryFeature = {
-// 	type: "Feature",
-// 	geometry: {
-// 		type: "Polygon",
-// 		coordinates: [
-// 			[
-// 				[-180, 89.99],
-// 				[180, 89.99],
-// 				[180, -89.99],
-// 				[-180, -89.99],
-// 				[-180, 89.99]
-// 			]
-// 		]
-// 	}
 // }
 var countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).features;
-// draw the map by loading world map coordinates in the form of JSON
-	// boundary
-	// 	.append("path")
-	// 	.datum(boundaryFeature)
-	// 	.attr("d", path);
+// draw the map by loading world map coordinates in the form of topoJSON
 	// act on the all path elems in the graphic
 	countries.selectAll("path")
 		.data(countriesJSON)
