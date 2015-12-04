@@ -22,3 +22,9 @@
   margin: 1px;
   color: white;
 }
+
+.chart text {
+	fill: white;
+	font: 10px sans-serif;
+	text-anchor: end;
+}

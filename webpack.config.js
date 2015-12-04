@@ -29,10 +29,10 @@ module.exports = {
                 loader: 'babel'
             },
 
-            {
-                test: /\.s?css$/,
-                loaders: ["style", "css", "sass"]
-            },
+            // {
+            //     test: /\.s?css$/,
+            //     loaders: ["style", "css", "sass"]
+            // },
 
             {
                 test: /\.json$/,
