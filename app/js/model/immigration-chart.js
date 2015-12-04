@@ -14,14 +14,21 @@ let data = [4, 8, 15, 16, 23, 42];
 
 // first select the chart container
 d3.select('.chart')
-	// define selection to which we will join data
-	.selectAll('div')
-	// join data to above selection
-	.data(data)
-	.enter().append('div')
-	.style('width', d => 
-		return d * 10 + 'px'
-	)
-	.text(d => 
-		return d
-	);
+  // initiate  data by defining the selection we will join data
+  .selectAll('div')
+  // join data to the above selection
+  .data(data)
+  // represents data for missing divs
+  .enter()
+  // 
+  .append('div')
+  // each bar chart is now bound to the data
+  .style('width', d => {
+  	// set dimensions of each bar based on its data
+  	// to complete width of each bar
+  	return d * 10 + "px";
+  })
+  // produce a label
+  .text(d => {
+  	return d;
+  });
