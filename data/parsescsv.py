@@ -15,3 +15,6 @@ for FILE_IN in files:
 	with open(FILE_OUT, 'w') as outfile:
 		outfile.write(json.dumps(to_dump))
 
+
+
+

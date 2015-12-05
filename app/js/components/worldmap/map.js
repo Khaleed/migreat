@@ -10,8 +10,8 @@ let isoCountries = require("i18n-iso-countries");
 
 // let isoCountries = require('npm i i18n-iso-countries');
 // define size of the map
-let width = 1000,
-	height = 600;
+let width = 960,
+	height = 960;
 // 
 let centroid = d3.geo.path()
     .projection(function(d) { return d; })
@@ -32,10 +32,11 @@ let svg = d3.select("body")
 let projection = d3.geo.orthographic()
 	.scale(248)
 	.clipAngle(90)
+	.precision(0.1)
 	// path generator to identify a project type
 let path = d3.geo.path()
 	.projection(projection);
-// }
+
 let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).features;
 // draw the map by loading world map coordinates in the form of topoJSON
 // act on the all path elems in the graphic
@@ -84,6 +85,7 @@ let n = countriesJSON.length;
 
 // helper step function from Bostock
 let step = function step() {
+
 	if (++i >= n) i = 0;
 
 	title.text(countriesJSON[i].id);
