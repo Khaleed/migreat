@@ -9,31 +9,35 @@ path {
     fill: #eee;
 }*/
 
-.country {
-  fill: #b8b8b8;
-  stroke: #fff;
-  stroke-width: .5px;
-  stroke-linejoin: round;
+body {
+  background: #fcfcfa;
+}
+
+.stroke {
+  fill: none;
+  stroke: #000;
+  stroke-width: 3px;
+}
+
+.fill {
+  fill: #fff;
 }
 
 .graticule {
   fill: none;
-  stroke: #000;
-  stroke-opacity: .3;
+  stroke: #777;
   stroke-width: .5px;
+  stroke-opacity: .5;
 }
 
-.graticule-outline {
+.land {
+  fill: #222;
+}
+
+.boundary {
   fill: none;
-  stroke: #333;
-  stroke-width: 1.5px;
-}
-
-text {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 18px;
-  font-weight: bold;
-  text-anchor: middle;
+  stroke: #fff;
+  stroke-width: .5px;
 }
 
 /*path {

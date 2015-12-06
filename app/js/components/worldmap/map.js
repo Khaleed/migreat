@@ -11,11 +11,7 @@ let isoCountries = require("i18n-iso-countries");
 // let isoCountries = require('npm i i18n-iso-countries');
 // define size of the map
 let width = 960,
-	height = 960;
-// 
-let centroid = d3.geo.path()
-    .projection(function(d) { return d; })
-    .centroid;
+	height = 580;
 
 // set svg window
 let svg = d3.select("body")
@@ -23,21 +19,24 @@ let svg = d3.select("body")
 	.attr("width", width)
 	.attr("height", height);
 
-// let boundary = svg.append("g")  // don't why this is here
-// 	.attr("id", "boundary");
-// let countries = svg.append("g")
-// 	.attr("id", "countries");
+let color = d3.scale.category10();
 
 //set up the view of the map
-let projection = d3.geo.orthographic()
-	.scale(248)
-	.clipAngle(90)
+let projection = d3.geo.kavrayskiy7()
+	.scale(170)
+	.translate([width /2, height / 2])
 	.precision(0.1)
-	// path generator to identify a project type
+
+// path generator to identify a project type
 let path = d3.geo.path()
 	.projection(projection);
 
+let graticule = d3.geo.graticule();
+
 let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).features;
+
+
+
 // draw the map by loading world map coordinates in the form of topoJSON
 // act on the all path elems in the graphic
 // countries.selectAll("path")
@@ -57,11 +56,6 @@ let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).featu
 // 	.attr('r', 1);
 // Returns a MultiLineString geometry object 
 // representing all meridians and parallels for this graticule.
-let graticule = d3.geo.graticule()
-	.extent([
-		[-180, -90],
-		[180 - .1, 90 - .1]
-	]);
 
 // line
 let line = svg.append('path')
@@ -80,35 +74,8 @@ let country = svg.selectAll(".destination-country")
 	.attr('class', 'destination-country')
 	.attr('d', path);
 
-let i = -1;
-let n = countriesJSON.length;
 
-// helper step function from Bostock
-let step = function step() {
 
-	if (++i >= n) i = 0;
 
-	title.text(isoCountries.getName(countriesJSON[i].id, 'en'));
+// 	title.text(isoCountries.getName(countriesJSON[i].id, 'en'));
 
-	country.transition()
-		.style("fill", function(d, j) {
-			return j === i ? "red" : "#b8b8b8";
-		});
-
-	d3.transition()
-		.delay(250)
-		.duration(1250)
-		.tween("rotate", function() {
-			var point = centroid(countriesJSON[i]),
-				rotate = d3.interpolate(projection.rotate(), [-point[0], -point[1]]);
-			return function(t) {
-				projection.rotate(rotate(t));
-				country.attr("d", path);
-				line.attr("d", path);
-			};
-		})
-		.transition()
-		.each("end", step);
-}
-
-step();
