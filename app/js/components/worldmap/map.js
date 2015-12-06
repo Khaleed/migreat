@@ -88,7 +88,7 @@ let step = function step() {
 
 	if (++i >= n) i = 0;
 
-	title.text(countriesJSON[i].id);
+	title.text(isoCountries.getName(countriesJSON[i].id, 'en'));
 
 	country.transition()
 		.style("fill", function(d, j) {
