@@ -1,7 +1,9 @@
 envs
 node_modules/
+*.xls
 *.csv
 *.json
 .awspublish*
 npm-debug.log
 .DS_Store
+lib

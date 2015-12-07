@@ -27,7 +27,7 @@ wb = xlrd.open_workbook('UN_MigrantStockByOriginAndDestination_2013T10.xls')
 migrate = []
 
 # Select sheets that we want: 1, 4, 7, 10 index and include appropiate year
-valid_sheets = [{'id': 1, 'year': 1900}, {'id': 4, 'year': 2000}, {'id': 7, 'year': 2010}, {'id': 10, 'year': 2013}] 
+valid_sheets = [{'id': 1, 'year': 1990}, {'id': 4, 'year': 2000}, {'id': 7, 'year': 2010}, {'id': 10, 'year': 2013}] 
 
 # Loop over the sheets
 for current_sheet in valid_sheets:
@@ -39,7 +39,7 @@ for current_sheet in valid_sheets:
     second_column = sh.col_values(1)
     starting_row = 15
     starting_column = 9
-
+    iso_column = sh.col_values(3)
     for colnum in range(starting_column, sh.ncols):
         # Create an aux dict to store the relation between the current country and the others
         country_name = sh.col_values(colnum)[starting_row]
@@ -47,8 +47,12 @@ for current_sheet in valid_sheets:
    
         for rownum in range(starting_row, sh.nrows - 1):
 	    # Store every country destination in the current dict
-            aux_dic['destinationList'].append({'countryDest': second_column[rownum], 'number': sh.col_values(colnum)[rownum]})
-    
+	    	val = sh.col_values(colnum)[rownum]
+	        if second_column[rownum] == "United States of America":
+                    aux_dic['destinationList'] \
+                    .append({'countryDest': second_column[rownum], 'number': int(val) if val else ''})
+    		if second_column[rownum] == country_name:
+    			aux_dic['iso'] = int(iso_column[rownum])
         # Append the current country to the collection
         countries.append(aux_dic)
 
