@@ -7,7 +7,6 @@ require("d3-geo-projection/d3.geo.projection.js"); // d3.geo will contain all ex
 let worldMap = require("../../../../data/test-world-map.json");
 let topojson = require("topojson");
 let isoCountries = require("i18n-iso-countries");
-let immigrationTotals = require("../../model/immigration-chart.js");
 let mockChart = require("../../../../public/d3asyncloadchart.js");
 
 // define the size of the map
@@ -98,10 +97,17 @@ countries.insert("path", ".graticule")
 let svgCentroids = countries.selectAll("circle")
 	.data(countriesJSON)
 	.enter()
+	.append('rect')
+	.attr('width', 10)
+	.attr('height', 25)
+	.attr("x", d => path.centroid(d)[0])
+	.attr("y", d => path.centroid(d)[1]);
+/*
 	.append("circle")
 	.attr("cx", d => path.centroid(d)[0])
 	.attr("cy", d => path.centroid(d)[1])
 	.attr("r", 1);
+	*/
 
 // zooming and panning a map
 // behaviour acts as event listeners

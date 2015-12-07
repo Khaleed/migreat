@@ -1,6 +1,6 @@
 /* This is the style for my world map */
 
-/*body {
+body {
   background: #fcfcfa;
 }
 
@@ -39,7 +39,7 @@
 
 .country:hover + .country-lbl {
   visibility: visible;
-}*/
+}
 
 .chart rect {
   fill: steelblue;
