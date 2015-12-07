@@ -1,20 +1,3 @@
-# import json
-# import csv
-# import os
-
-# files = ['Table_{}.csv'.format(i) for i in xrange(1,13)]
-
-# for FILE_IN in files:
-# 	to_dump = {}
-# 	with open(FILE_IN, 'rb') as csvfile:
-# 		spamreader = csv.DictReader(csvfile)
-# 		for row in spamreader :
-# 			to_dump[row['Major area, region, country or area of destination']] = row
-				 			
-# 	FILE_OUT = '{}.json'.format(os.path.basename(FILE_IN)[:-4])	
-# 	with open(FILE_OUT, 'w') as outfile:
-# 		outfile.write(json.dumps(to_dump))
-
 import xlrd
 import json
 
@@ -66,57 +49,28 @@ with open('data.json', 'w') as outfile:
 JSON structure created:
 
 [
+  {
+    "countries_relation": [
       {
-	  "countries_relation": [{
-		      "name": "Afghanistan",
-		      "destinationList": [{
-			      "countryDest": "Major area, region, country or area of destination",
-			      "number": "Afghanistan"
-			  }, {
-			      "countryDest": "WORLD",
-			      "number": 7295267.0
-			  }, {
-			      "countryDest": "More developed regions",
-			      "number": 119772.0
-			  }, {
-			      "countryDest": "Sub-Saharan Africa",
-			      "number": 33.0
-			  }, {
-			      "countryDest": "AFRICA",
-			    "number": 964.0
-		      {
-		      ...
-		      
-		      "name": "Ghana",
-		      "destinationList": [{
-			      "countryDest": "Major area, region, country or area of destination",
-			      "number": "Ghana"
-			  }, {
-			      "countryDest": "WORLD",
-			      "number": 388872.0
-			  }, {
-			      "countryDest": "More developed regions",
-			      "number": 130633.0
-			  }, {
-		      ...
-		      
-		      ]
-	  "year": 1900
-	},
-	...
-	{
-	  "countries_relation": [{
-		      "name": "Afghanistan",
-		      "destinationList": [{
-			      "countryDest": "Major area, region, country or area of destination",
-			      "number": "Afghanistan"
-		      ...
-		      
-		      ]
-	  "year": 2000
-	},
-]
-
+        "iso": 4,
+        "name": "Afghanistan",
+        "destinationList": [
+          {
+            "countryDest": "United States of America",
+            "number": 32735
+          }
+        ]
+      },
+      {
+        "iso": 8,
+        "name": "Albania",
+        "destinationList": [
+          {
+            "countryDest": "United States of America",
+            "number": 6476
+          }
+        ]
+      }
 """
 
 
