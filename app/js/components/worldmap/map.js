@@ -8,6 +8,7 @@ let worldMap = require("../../../../data/test-world-map.json");
 let topojson = require("topojson");
 let isoCountries = require("i18n-iso-countries");
 let immigrationTotals = require("../../model/immigration-chart.js");
+let mockChart = require("../../../../public/d3asyncloadchart.js");
 
 // define the size of the map
 let width = 960,
