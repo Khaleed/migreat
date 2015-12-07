@@ -38,3 +38,4 @@ body {
 .country:hover + .country-lbl {
   visibility: visible;
 }
+

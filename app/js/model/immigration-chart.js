@@ -15,7 +15,6 @@ let height = 500 - margin.top - margin.bottom;
 
 // a function that returns scaled display value
 // e.g. input of 4 returns 40
-
 let x = d3.scale.ordinal()
 	.rangeRoundBands([0, width], .1);
 
