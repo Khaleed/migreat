@@ -4,6 +4,10 @@ body {
   background: #fcfcfa;
 }
 
+body {
+  background: #fcfcfa;
+}
+
 .stroke {
   fill: none;
   stroke: #000;
@@ -41,12 +45,3 @@ body {
   visibility: visible;
 }
 
-.chart rect {
-  fill: steelblue;
-}
-
-.chart text {
-  fill: white;
-  font: 10px sans-serif;
-  text-anchor: end;
-}

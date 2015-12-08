@@ -11,13 +11,13 @@ let isoCountries = require("i18n-iso-countries");
 
 // define the size of the map
 let width = 960,
-	height = 580;
+	height = 500;
 
 let color = d3.scale.category20();
 
 //set up the view of the map
-let projection = d3.geo.kavrayskiy7()
-	.scale(170)
+let projection = d3.geo.naturalEarth()
+	.scale(167)
 	.translate([width / 2, height / 2])
 	.precision(0.1)
 
