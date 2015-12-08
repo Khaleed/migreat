@@ -17,7 +17,7 @@ let color = d3.scale.category20();
 
 //set up the view of the map
 let projection = d3.geo.naturalEarth()
-	.scale(167)
+	.scale(170)
 	.translate([width / 2, height / 2])
 	.precision(0.1)
 
