@@ -93,7 +93,6 @@ countries.insert("path", ".graticule")
 	.attr("class", "boundary")
 	.attr("d", path);
 
-
 let svgCentroids = countries.selectAll("bar")
 	.data(countriesJSON)
 	.enter()
@@ -123,5 +122,18 @@ let zoom = d3.behavior.zoom()
 		countries.selectAll("path")
 			.attr("d", path.projection(projection));
 	});
-
 countries.call(zoom);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
