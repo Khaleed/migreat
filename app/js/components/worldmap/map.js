@@ -12,15 +12,13 @@ let isoCountries = require("i18n-iso-countries");
 // define the size of the map
 let width = 960,
 	height = 500;
-
+// set color of the map
 let color = d3.scale.category20();
-
 //set up the view of the map
 let projection = d3.geo.naturalEarth()
 	.scale(170)
 	.translate([width / 2, height / 2])
 	.precision(0.1)
-
 // path generator to identify a project type
 let path = d3.geo.path()
 	.projection(projection);
@@ -28,13 +26,18 @@ let path = d3.geo.path()
 // MultiLineString geometry object representing all meridians and parallels for this graticule.
 let graticule = d3.geo.graticule();
 
+let tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
 // create root SVG element and append to body
 let countries = d3.select("body")
 	.append("svg")
 	.attr("width", width)
 	.attr("height", height);
 
+let offsetL = document.body.offsetLeft+40;
+let offsetT = document.body.offsetTop+20;
+
 // create and append new elements
+// SVG allows graphical objects to be defined for later reuse.
 countries.append("defs")
 	.append("path")
 	.datum({
@@ -43,6 +46,8 @@ countries.append("defs")
 	.attr("id", "sphere")
 	.attr("id", path);
 
+
+// The use element takes nodes from within the SVG document, and duplicates them somewhere else. 
 countries.append("use")
 	.attr("class", "stroke")
 	.attr("xlink:href", "#sphere");
@@ -56,13 +61,27 @@ countries.append("path")
 	.attr("class", "graticule")
 	.attr("d", path);
 
+// load the TopoJSON file with the coordinates for the world map
 let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).features;
 let neighbors = topojson.neighbors(worldMap.objects.countries.geometries);
-
+// 
 let cdata = countries.selectAll(".country")
 	.data(countriesJSON)
 	.enter()
 	.append("g");
+
+//tooltips
+cdata.on("mousemove", function(d, i) {
+		let mouse = d3.mouse(countries.node()).map(function(d) {
+			return parseInt(d);
+		});
+		tooltip.classed("hidden", false)
+			   .attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+			   .html(isoCountries.getName(countriesJSON[i].id, "en"))
+	})
+	.on("mouseout", function(d, i) {
+		tooltip.classed("hidden", true)
+	});
 
 cdata.append("path", ".graticule")
 	.attr("d", path)
@@ -74,20 +93,20 @@ cdata.append("path", ".graticule")
 		}) + 1 | 0);
 	});
 // append name of countries in the centroid of each country
-cdata.append("text")
-	.text((d, i) => {
-		return isoCountries.getName(countriesJSON[i].id, "en");
-	})
-	.attr("x", d => {
-		return path.centroid(d)[0]
-	})
-	.attr("y", d => {
-		return path.centroid(d)[1]
-	})
-	.attr("class", "country-lbl");
+// cdata.append("text")
+// 	.text((d, i) => {
+// 		return isoCountries.getName(countriesJSON[i].id, "en");
+// 	})
+// 	.attr("x", d => {
+// 		return path.centroid(d)[0]
+// 	})
+// 	.attr("y", d => {
+// 		return path.centroid(d)[1]
+// 	})
+// 	.attr("class", "country-lbl");
 // insert a new element
 countries.insert("path", ".graticule")
-	.datum(topojson.mesh(worldMap, worldMap.objects.countries, (a, b) => { // datums sets and gets bound data for each selected element
+	.datum(topojson.mesh(worldMap, worldMap.objects.countries, (a, b) => { // datums set and get bound data for each selected element
 		return a !== b;
 	}))
 	.attr("class", "boundary")
@@ -106,25 +125,52 @@ let svgCentroids = countries.selectAll("bar")
 	.attr("y", d => path.centroid(d)[1])
 	.style("visibility", d => (d.id == 840) ? 'visible' : 'hidden');
 	
-	/*
-	.append("circle")
-	.attr("cx", d => path.centroid(d)[0])
-	.attr("cy", d => path.centroid(d)[1])
-	.attr("r", 1);
-	*/
-
 // zooming and panning a map
 // behaviour acts as event listeners
 let zoom = d3.behavior.zoom()
-	.on("zoom", () => {
-		countries.attr("transform", "translate(" +
-			d3.event.translate.join(",") + ")scale(" + d3.event.scale + ")");
-		countries.selectAll("path")
-			.attr("d", path.projection(projection));
-	});
+    .on("zoom",function() {
+        countries.attr("transform","translate("+ 
+            d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+        countries.selectAll("path")  
+            .attr("d", path.projection(projection)); 
+});
 countries.call(zoom);
 
 
+
+
+// // the code that will go into the requestAnimationFrame 
+// const migrantsPerArrow = 25;
+// const velocityInDegrees = 720; 
+// let migrantsPerCountry = 10000; // this is people migrating from a particular country to the USA
+// let currentAnimationTime = 1; // this should be the current time - 0 when animation starts and 1 when it ends
+
+// let period = migrantsPerArrow / migrantsPerCountry // how time between each arrow launch
+// let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period // how long the arrow has been alive
+
+// let latSource = 45; 
+// let latDest = 0;
+// let longSource = 90;
+// let longDest = 0;
+// // pythagoras theorem
+// let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2))
+// // physics vector - something pointing from one direction to another for the lat
+// let unitVectorFromSrcToDestLat = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
+// // physics vector - something pointing from one direction to another for the long
+// let unitVectorFromSrcToDestLong = Math.pow(longDest - longSource, 2) / distanceBetweenDestAndSrc;
+
+// let condition = arrowLifeSpan * velocityInDegrees < distanceBetweenDestAndSrc
+// // this will give coordinates of the arrow at any time
+// while (condition) {
+// 	lat = latSource + unitVectorFromSrcToDestLat * arrowLifeSpan;
+// 	long = longSource + unitVectorFromSrcToDestLong * arrowLifeSpan;
+// 	drawArrowAt(lat, long)
+// 	arrowLifeSpan += period;
+// }
+
+// let drawArrowAt = (lat, long) => {
+	
+// }
 
 
 
