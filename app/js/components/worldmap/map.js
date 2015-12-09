@@ -70,7 +70,7 @@ let cdata = countries.selectAll(".country")
 	.enter()
 	.append("g");
 
-//tooltips
+// tooltips
 cdata.on("mousemove", function(d, i) {
 		let mouse = d3.mouse(countries.node()).map(function(d) {
 			return parseInt(d);
@@ -92,19 +92,7 @@ cdata.append("path", ".graticule")
 			return countriesJSON[n].color;
 		}) + 1 | 0);
 	});
-// append name of countries in the centroid of each country
-// cdata.append("text")
-// 	.text((d, i) => {
-// 		return isoCountries.getName(countriesJSON[i].id, "en");
-// 	})
-// 	.attr("x", d => {
-// 		return path.centroid(d)[0]
-// 	})
-// 	.attr("y", d => {
-// 		return path.centroid(d)[1]
-// 	})
-// 	.attr("class", "country-lbl");
-// insert a new element
+
 countries.insert("path", ".graticule")
 	.datum(topojson.mesh(worldMap, worldMap.objects.countries, (a, b) => { // datums set and get bound data for each selected element
 		return a !== b;
@@ -139,7 +127,6 @@ countries.call(zoom);
 // the code that will go into the requestAnimationFrame 
 // all countries are going to finish at the same time
 // what will be different will be the amount of arrows per second
-
 const totalArrowTime = 60 
 const migrantsPerArrow = 400;
 const velocityInDegrees = 720; 
