@@ -136,41 +136,42 @@ let zoom = d3.behavior.zoom()
 });
 countries.call(zoom);
 
+// the code that will go into the requestAnimationFrame 
+// all countries are going to finish at the same time
+// what will be different will be the amount of arrows per second
 
+const totalArrowTime = 60 
+const migrantsPerArrow = 400;
+const velocityInDegrees = 720; 
+let migrantsPerCountry = 10000; // this is people migrating from a particular country to the USA
+let currentAnimationTime = 1; // this should be the current time - 0 when animation starts and 1 when it ends
 
+let period = migrantsPerArrow / migrantsPerCountry // how time between each arrow launch
+let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period // how long the arrow has been alive
 
-// // the code that will go into the requestAnimationFrame 
-// const migrantsPerArrow = 25;
-// const velocityInDegrees = 720; 
-// let migrantsPerCountry = 10000; // this is people migrating from a particular country to the USA
-// let currentAnimationTime = 1; // this should be the current time - 0 when animation starts and 1 when it ends
+let latSource = 45; 
+let latDest = 0;
+let longSource = 90;
+let longDest = 0;
+// pythagoras theorem
+let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2))
+// physics vector - something pointing from one direction to another for the lat
+let unitVectorFromSrcToDestLat = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
+// physics vector - something pointing from one direction to another for the long
+let unitVectorFromSrcToDestLong = Math.pow(longDest - longSource, 2) / distanceBetweenDestAndSrc;
 
-// let period = migrantsPerArrow / migrantsPerCountry // how time between each arrow launch
-// let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period // how long the arrow has been alive
+let condition = arrowLifeSpan * velocityInDegrees < distanceBetweenDestAndSrc
+// this will give coordinates of the arrow at any time
+while (condition) {
+	lat = latSource + unitVectorFromSrcToDestLat * arrowLifeSpan;
+	long = longSource + unitVectorFromSrcToDestLong * arrowLifeSpan;
+	drawArrowAt(lat, long)
+	arrowLifeSpan += period;
+}
 
-// let latSource = 45; 
-// let latDest = 0;
-// let longSource = 90;
-// let longDest = 0;
-// // pythagoras theorem
-// let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2))
-// // physics vector - something pointing from one direction to another for the lat
-// let unitVectorFromSrcToDestLat = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
-// // physics vector - something pointing from one direction to another for the long
-// let unitVectorFromSrcToDestLong = Math.pow(longDest - longSource, 2) / distanceBetweenDestAndSrc;
-
-// let condition = arrowLifeSpan * velocityInDegrees < distanceBetweenDestAndSrc
-// // this will give coordinates of the arrow at any time
-// while (condition) {
-// 	lat = latSource + unitVectorFromSrcToDestLat * arrowLifeSpan;
-// 	long = longSource + unitVectorFromSrcToDestLong * arrowLifeSpan;
-// 	drawArrowAt(lat, long)
-// 	arrowLifeSpan += period;
-// }
-
-// let drawArrowAt = (lat, long) => {
+let drawArrowAt = (lat, long) => {
 	
-// }
+}
 
 
 
