@@ -1,7 +1,7 @@
 "use strict";
 
 let d3 = require(d3);
-let map = require('../components/worldmap/map.js');
+let map = require("../")
 
 // the code that will go into the requestAnimationFrame 
 // all countries are going to finish at the same time

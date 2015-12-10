@@ -7,7 +7,6 @@ require("d3-geo-projection/d3.geo.projection.js"); // d3.geo will contain all ex
 let worldMap = require("../../../../data/test-world-map.json");
 let topojson = require("topojson");
 let isoCountries = require("i18n-iso-countries");
-//let mockChart = require("../../../../public/d3asyncloadchart.js");
 
 // define the size of the map
 let width = 960,
@@ -46,7 +45,6 @@ countries.append("defs")
 	})
 	.attr("id", "sphere")
 	.attr("id", path);
-
 
 // The use element takes nodes from within the SVG document, and duplicates them somewhere else. 
 countries.append("use")
@@ -108,37 +106,23 @@ let svgCentroids = countries.selectAll("bar")
 	.attr('width', 10)
 	.attr('height', d => {
 		//console.log(isoCountries.getName(d.id, 'en'), d.id);
-		console.log(path.centroid(d));
+		// console.log(path.centroid(d));
 		return 25;
 	})
 	.attr("x", d => path.centroid(d)[0])
 	.attr("y", d => path.centroid(d)[1])
 	.style("visibility", d => true ? 'visible' : 'hidden');
 
-// for(centroid in svgCentroids){
-
-// 	d3.geo.centroid()
-
-// }
-
-// 	console.log(svgCentroids);
-	
 // zooming and panning a map
 // behaviour acts as event listeners
-let zoom = d3.behavior.zoom()
-    .on("zoom",function() {
-        countries.attr("transform","translate("+ 
-            d3.event.translate.join(",")+")scale("+d3.event.scale+")");
-        countries.selectAll("path")  
-            .attr("d", path.projection(projection)); 
-});
-countries.call(zoom);
-
-
-
-// then you map that list to a function
-
-
+// let zoom = d3.behavior.zoom()
+//     .on("zoom",function() {
+//         countries.attr("transform","translate("+ 
+//             d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+//         countries.selectAll("path")  
+//             .attr("d", path.projection(projection)); 
+// });
+// countries.call(zoom);
 
 // the code that will go into the requestAnimationFrame 
 // all countries are going to finish at the same time
@@ -149,29 +133,28 @@ countries.call(zoom);
 // let migrantsPerCountry = 10000; // this is people migrating from a particular country to the USA
 // let currentAnimationTime = 1; // this should be the current time - 0 when animation starts and 1 when it ends
 
-let period = migrantsPerArrow / migrantsPerCountry // how time between each arrow launch
-let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period // how long the arrow has been alive
+// let period = migrantsPerArrow / migrantsPerCountry // how time between each arrow launch
+// let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period // how long the arrow has been alive
 
-let latSource = 45; 
-let latDest = 0;
-let longSource = 90;
-let longDest = 0;
-// pythagoras theorem
-let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2))
-// physics vector - something pointing from one direction to another for the lat
-let unitVectorFromSrcToDestLat = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
-// physics vector - something pointing from one direction to another for the long
-let unitVectorFromSrcToDestLong = Math.pow(longDest - longSource, 2) / distanceBetweenDestAndSrc;
+// let latSource = 45; 
+// let latDest = 0;
+// let longSource = 90;
+// let longDest = 0;
+// // pythagoras theorem
+// let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2))
+// // physics vector - something pointing from one direction to another for the lat
+// let unitVectorFromSrcToDestLat = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
+// // physics vector - something pointing from one direction to another for the long
+// let unitVectorFromSrcToDestLong = Math.pow(longDest - longSource, 2) / distanceBetweenDestAndSrc;
 
-let condition = arrowLifeSpan * velocityInDegrees < distanceBetweenDestAndSrc
-// this will give coordinates of the arrow at any time
-while (condition) {
-	lat = latSource + unitVectorFromSrcToDestLat * arrowLifeSpan;
-	long = longSource + unitVectorFromSrcToDestLong * arrowLifeSpan;
-	drawArrowAt(lat, long)
-	arrowLifeSpan += period;
-}
-
+// let condition = arrowLifeSpan * velocityInDegrees < distanceBetweenDestAndSrc
+// // this will give coordinates of the arrow at any time
+// while (condition) {
+// 	lat = latSource + unitVectorFromSrcToDestLat * arrowLifeSpan;
+// 	long = longSource + unitVectorFromSrcToDestLong * arrowLifeSpan;
+// 	drawArrowAt(lat, long)
+// 	arrowLifeSpan += period;
+// }
 
 // how to map from origins to destinations
 // [US_ISO_ID]
@@ -185,21 +168,31 @@ while (condition) {
 //      originISO: totalImmigrants 
 // }]
 
-let destinations = {}
+let immigrationData = d3.csv("us2013.csv", (error, data) => {
+	if (error) {
+		console.error(error);
+	} else {
+		console.log(data);
+	}
+});
 
-let getArrowsFromDelta = (migrantsPerArrow, destinationISO, delta) => {
- 	let destinationData = destinations[destinationISO];
-	Object.keys(destinationData).map((countryISO) => {
-		let totalImmigrantsFromCountry = destinationData[countryISO]
-		let numberOfArrows = totalImmigrantsFromCountry/migrantsPerArrow;
-		// we now need to use the delta
-		// we need to return a list of arrows with ratios for each
-	});
-}
+// let destinations = {}
 
-let drawArrowAt = (lat, long) => {
+// let getArrowsFromDelta = (migrantsPerArrow, destinationISO, delta) => {
+//  	let destinationData = destinations[destinationISO];
+// 	Object.keys(destinationData).map((countryISO) => {
+// 		let totalImmigrantsFromCountry = destinationData[countryISO]
+// 		let numberOfArrows = totalImmigrantsFromCountry/migrantsPerArrow;
+// 		// we now need to use the delta
+// 		// we need to return a list of arrows with ratios for each
+// 	});
+// }
+
+// let drawArrowAt = (lat, long) => {
 	
-}
+// }
+
+
 
 
 
