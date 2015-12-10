@@ -61,6 +61,14 @@ countries.append("path")
 
 // load the TopoJSON file with the coordinates for the world map
 let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).features;
+
+// {1: [300, 250], 2: [100, 200], 5: [120, 100]}
+let countriesToCentroids = countriesJSON.reduce((obj, d) => { 
+	let centroid = path.centroid(d);
+	 return obj[d.id] = centroid; 
+}, {}); 
+
+console.log(countriesJSON);
 let neighbors = topojson.neighbors(worldMap.objects.countries.geometries);
 // draw the map with the geoJSON data
 let cdata = countries.selectAll(".country")
@@ -104,7 +112,6 @@ let svgCentroids = countries.selectAll("bar")
 	.append('rect')
 	.attr('width', 10)
 	.attr('height', d => {
-		console.log(isoCountries.getName(d.id, 'en'), d.id);
 		// console.log(path.centroid(d));
 		return 25;
 	})
@@ -174,49 +181,60 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 	if (error) {
 		console.error(error);
 	} else {
-		console.log(data);
+		destinations = {
+			840: data
+		};
 	}
-	destinations = {840: data};
 });
 
-let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
-	let destinationData = destinations[destinationISO];
-	Object.keys(destinationData).map((countryISO) => {
-		let totalImmigrantsFromCountry = destinationData[countryISO]
-		let numberOfArrows = totalImmigrantsFromCountry / migrantsPerArrow;
-		// we now need to use the delta
-		// we need to return a list of arrows with ratios for each
-	});
-}
+// let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
+// 	let destinationData = destinations[destinationISO];
+// 	Object.keys(destinationData).map((countryISO) => {
+// 		let totalImmigrantsFromCountry = destinationData[countryISO];
+// 		let numberOfArrows = totalImmigrantsFromCountry / migrantsPerArrow;
+// 		// we now need to use the ratio
 
-// generate arrows and pass them that to a draw function
+// 		// we need to return a list of arrows with ratios for each
+// 	});
+// }
+
+// generate arrows and pass that to a draw function
 let render = (ratio) => {
-	// information about dest and origin
+	// we need information about US and origins and ratio
+	let arrows = {
+		iso: [0.1, 0.2, 0.3, 0.4]
+	};
+	// let arrows = getArrowsFromRatio(migrantsPerArrow, 840, ratio)
+	destinations[840]
+	drawArrows(arrows, 840);
+};
 
-}
+let getCentroid = iso => {
+	// return centroid
+};
 
 let drawArrows = (arrowsPerOrigin, destination) => {
-
-}
+	let destCentroid = getCentroid(destination);
+	let originsCentroid = Object.keys(arrowsPerOrigin).map(getCentroid);
+};
 // this will be called for the life cycles
 let startAnimation = (duration, callback) => { // callback -> higher order function
-	// the callback decouples ticks from time
-	let startTime = null;
-	// called every time animation continues going
-	let animationStep = (timestamp) => {
-		let currentTime = timestamp;
-		// when to continue animation
-		if (currentTime - startTime <= duration) {
-			let ratio = (currentTime - startTime) / duration;
-			callback(ratio);
-			window.requestAnimationFrame(animationStep);
+		// the callback decouples ticks from time
+		let startTime = null;
+		// called every time animation continues going
+		let animationStep = (timestamp) => {
+			let currentTime = timestamp;
+			// when to continue animation
+			if (currentTime - startTime <= duration) {
+				let ratio = (currentTime - startTime) / duration;
+				callback(ratio);
+				window.requestAnimationFrame(animationStep);
+			}
 		}
+		window.requestAnimationFrame((timestamp) => {
+			startTime = timestamp;
+			window.requestAnimationFrame(animationStep);
+		});
 	}
-	window.requestAnimationFrame((timestamp) => {
-		startTime = timestamp;
-		window.requestAnimationFrame(animationStep);
-	});
-}
-// see how ratio changes from 0 to 1
+	// see how ratio changes from 0 to 1
 startAnimation(60 * 1000, render);
-
