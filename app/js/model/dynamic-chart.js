@@ -82,5 +82,4 @@ d3.tsv("letterdata.tsv", coerceDataType, (error, data) => {
 		.attr('height', d => {
 			return height - y(d.frequency)
 		});
-
 });
