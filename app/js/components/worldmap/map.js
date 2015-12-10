@@ -30,6 +30,7 @@ let tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
 // create root SVG element and append to body
 let countries = d3.select("body")
 	.append("svg")
+	.attr("id", "d3-stuff")
 	.attr("width", width)
 	.attr("height", height);
 
@@ -106,12 +107,21 @@ let svgCentroids = countries.selectAll("bar")
 	.append('rect')
 	.attr('width', 10)
 	.attr('height', d => {
-		console.log(isoCountries.getName(d.id, 'en'), d.id);
+		//console.log(isoCountries.getName(d.id, 'en'), d.id);
+		console.log(path.centroid(d));
 		return 25;
 	})
 	.attr("x", d => path.centroid(d)[0])
 	.attr("y", d => path.centroid(d)[1])
-	.style("visibility", d => (d.id == 840) ? 'visible' : 'hidden');
+	.style("visibility", d => true ? 'visible' : 'hidden');
+
+// for(centroid in svgCentroids){
+
+// 	d3.geo.centroid()
+
+// }
+
+// 	console.log(svgCentroids);
 	
 // zooming and panning a map
 // behaviour acts as event listeners
@@ -124,14 +134,20 @@ let zoom = d3.behavior.zoom()
 });
 countries.call(zoom);
 
+
+
+// then you map that list to a function
+
+
+
 // the code that will go into the requestAnimationFrame 
 // all countries are going to finish at the same time
 // what will be different will be the amount of arrows per second
-const totalArrowTime = 60 
-const migrantsPerArrow = 400;
-const velocityInDegrees = 720; 
-let migrantsPerCountry = 10000; // this is people migrating from a particular country to the USA
-let currentAnimationTime = 1; // this should be the current time - 0 when animation starts and 1 when it ends
+// const totalArrowTime = 60 
+// const migrantsPerArrow = 400;
+// const velocityInDegrees = 720; 
+// let migrantsPerCountry = 10000; // this is people migrating from a particular country to the USA
+// let currentAnimationTime = 1; // this should be the current time - 0 when animation starts and 1 when it ends
 
 let period = migrantsPerArrow / migrantsPerCountry // how time between each arrow launch
 let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period // how long the arrow has been alive
@@ -154,6 +170,31 @@ while (condition) {
 	long = longSource + unitVectorFromSrcToDestLong * arrowLifeSpan;
 	drawArrowAt(lat, long)
 	arrowLifeSpan += period;
+}
+
+
+// how to map from origins to destinations
+// [US_ISO_ID]
+// so you need a list of destinations
+
+
+// ƒ = migrantsPerArrow -> destination -> delta -> arrowCoordinatesPerOrigin
+// D = arrowCoordinatesPerOrigin -> destination -> canvas
+
+// [destinationISO: {
+//      originISO: totalImmigrants 
+// }]
+
+let destinations = {}
+
+let getArrowsFromDelta = (migrantsPerArrow, destinationISO, delta) => {
+ 	let destinationData = destinations[destinationISO];
+	Object.keys(destinationData).map((countryISO) => {
+		let totalImmigrantsFromCountry = destinationData[countryISO]
+		let numberOfArrows = totalImmigrantsFromCountry/migrantsPerArrow;
+		// we now need to use the delta
+		// we need to return a list of arrows with ratios for each
+	});
 }
 
 let drawArrowAt = (lat, long) => {
