@@ -29,16 +29,6 @@ body {
   stroke-width: .5px;
 }
 
-/*.country-lbl {
-  font-size: 10px;
-  visibility: hidden;
-  z-index: 900;
-}*/
-
-/*.country:hover + .country-lbl {
-  visibility: visible;
-}*/
-
 .hidden { 
   display: none; 
 }
@@ -61,7 +51,7 @@ div.tooltip {
   left: 0;
 }
 
-#d3-stuff {
+#map {
   position: absolute;
   top: 0;
   left: 0;

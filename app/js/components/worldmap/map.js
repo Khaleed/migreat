@@ -7,10 +7,9 @@ require("d3-geo-projection/d3.geo.projection.js"); // d3.geo will contain all ex
 let worldMap = require("../../../../data/test-world-map.json");
 let topojson = require("topojson");
 let isoCountries = require("i18n-iso-countries");
-
 // define the size of the map
-let width = 1000,
-	height = 700;
+let width = 1200,
+	height = 800;
 // set color of the map
 let color = d3.scale.category20();
 //set up the view of the map
@@ -18,24 +17,24 @@ let projection = d3.geo.naturalEarth()
 	.scale(170)
 	.translate([width / 2, height / 2])
 	.precision(0.1)
-// path generator to identify a project type
+	// path generator to identify a project type
 let path = d3.geo.path()
 	.projection(projection);
-
-// MultiLineString geometry object representing all meridians and parallels for this graticule.
+// geometry object representing all meridians and parallels for this graticule (basically for the grid lines).
 let graticule = d3.geo.graticule();
-
-let tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
-// create root SVG element and append to body
+// append countries svg element
 let countries = d3.select("body")
 	.append("svg")
-	.attr("id", "d3-stuff")
+	.attr("id", "map")
 	.attr("width", width)
 	.attr("height", height);
-
-let offsetL = document.body.offsetLeft+40;
-let offsetT = document.body.offsetTop+20;
-
+// tool tip for hovering countries
+let tooltip = d3.select("body")
+	.append("div")
+	.attr("class", "tooltip hidden");
+// offset calculations for the tooltip
+let offsetL = document.body.offsetLeft + 40;
+let offsetT = document.body.offsetTop + 20;
 // create and append new elements
 // SVG allows graphical objects to be defined for later reuse.
 countries.append("defs")
@@ -63,7 +62,7 @@ countries.append("path")
 // load the TopoJSON file with the coordinates for the world map
 let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).features;
 let neighbors = topojson.neighbors(worldMap.objects.countries.geometries);
-// 
+// draw the map with the geoJSON data
 let cdata = countries.selectAll(".country")
 	.data(countriesJSON)
 	.enter()
@@ -75,13 +74,13 @@ cdata.on("mousemove", function(d, i) {
 			return parseInt(d);
 		});
 		tooltip.classed("hidden", false)
-			   .attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
-			   .html(isoCountries.getName(countriesJSON[i].id, "en"))
+			.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+			.html(isoCountries.getName(countriesJSON[i].id, "en"))
 	})
 	.on("mouseout", function(d, i) {
 		tooltip.classed("hidden", true)
 	});
-
+// fill the map with colors 
 cdata.append("path", ".graticule")
 	.attr("d", path)
 	.attr("class", "country")
@@ -98,7 +97,7 @@ countries.insert("path", ".graticule")
 	}))
 	.attr("class", "boundary")
 	.attr("d", path);
-
+// find centroids of each country
 let svgCentroids = countries.selectAll("bar")
 	.data(countriesJSON)
 	.enter()
@@ -116,46 +115,46 @@ let svgCentroids = countries.selectAll("bar")
 // zooming and panning a map
 // behaviour acts as event listeners
 let zoom = d3.behavior.zoom()
-    .on("zoom",function() {
-        countries.attr("transform","translate("+ 
-            d3.event.translate.join(",")+")scale("+d3.event.scale+")"); // currently not working
-        countries.selectAll("path")  
-            .attr("d", path.projection(projection)); 
-});
+	.on("zoom", function() {
+		countries.attr("transform", "translate(" +
+			d3.event.translate.join(",") + ")scale(" + d3.event.scale + ")"); // currently not working
+		countries.selectAll("path")
+			.attr("d", path.projection(projection));
+	});
 countries.call(zoom);
 
-// // the code that will go into the requestAnimationFrame 
-// // all countries are going to finish at the same time
-// // what will be different will be the amount of arrows per second
-const totalArrowTime = 60 
+// the code that will go into the requestAnimationFrame 
+// all countries are going to finish at the same time
+// what will be different will be the amount of arrows per second
+const totalArrowTime = 60
 const migrantsPerArrow = 400;
-const velocityInDegrees = 720; 
+const velocityInDegrees = 720;
 let migrantsPerCountry = 10000; // this is people migrating from a particular country to the USA
 let currentAnimationTime = 1; // this should be the current time - 0 when animation starts and 1 when it ends
-
+// ticks?
 let period = migrantsPerArrow / migrantsPerCountry // how much time between each arrow launch
 let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period // how long the arrow has been alive
 
-let latSource = 45; 
+let latSource = 45;
 let latDest = 0;
 let longSource = 90;
 let longDest = 0;
 
 // pythagoras theorem
 let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2))
-// physics vector - something pointing from one direction to another for the lat
+	// physics vector - something pointing from one direction to another for the lat
 let unitVectorFromSrcToDestLat = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
 // physics vector - something pointing from one direction to another for the long
 let unitVectorFromSrcToDestLong = Math.pow(longDest - longSource, 2) / distanceBetweenDestAndSrc;
 
-let condition = arrowLifeSpan * velocityInDegrees < distanceBetweenDestAndSrc
-// this will provide coordinates of any arrow at any time
-while (condition) {
-	lat = latSource + unitVectorFromSrcToDestLat * arrowLifeSpan;
-	long = longSource + unitVectorFromSrcToDestLong * arrowLifeSpan;
-	drawArrowAt(lat, long)
-	arrowLifeSpan += period;
-}
+// let condition = arrowLifeSpan * velocityInDegrees < distanceBetweenDestAndSrc
+// 	// this will provide coordinates of any arrow at any time
+// while (condition) {
+// 	lat = latSource + unitVectorFromSrcToDestLat * arrowLifeSpan;
+// 	long = longSource + unitVectorFromSrcToDestLong * arrowLifeSpan;
+// 	drawArrowAt(lat, long)
+// 	arrowLifeSpan += period;
+// }
 
 // how to map from origins to destinations
 // [US_ISO_ID]
@@ -168,39 +167,56 @@ while (condition) {
 // [destinationISO: {
 //      originISO: totalImmigrants 
 // }]
+// load data
 
+let destinations = null;
 let immigrationData = d3.csv("us2013.csv", (error, data) => {
 	if (error) {
 		console.error(error);
 	} else {
 		console.log(data);
 	}
+	destinations = {840: data};
 });
 
-let destinations = {}
-
-let getArrowsFromDelta = (migrantsPerArrow, destinationISO, delta) => {
- 	let destinationData = destinations[destinationISO];
+let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
+	let destinationData = destinations[destinationISO];
 	Object.keys(destinationData).map((countryISO) => {
 		let totalImmigrantsFromCountry = destinationData[countryISO]
-		let numberOfArrows = totalImmigrantsFromCountry/migrantsPerArrow;
+		let numberOfArrows = totalImmigrantsFromCountry / migrantsPerArrow;
 		// we now need to use the delta
 		// we need to return a list of arrows with ratios for each
 	});
 }
 
-let drawArrowAt = (lat, long) => {
-	
+// generate arrows and pass them that to a draw function
+let render = (ratio) => {
+	// information about dest and origin
+
 }
 
+let drawArrows = (arrowsPerOrigin, destination) => {
 
-
-
-
-
-
-
-
-
-
+}
+// this will be called for the life cycles
+let startAnimation = (duration, callback) => { // callback -> higher order function
+	// the callback decouples ticks from time
+	let startTime = null;
+	// called every time animation continues going
+	let animationStep = (timestamp) => {
+		let currentTime = timestamp;
+		// when to continue animation
+		if (currentTime - startTime <= duration) {
+			let ratio = (currentTime - startTime) / duration;
+			callback(ratio);
+			window.requestAnimationFrame(animationStep);
+		}
+	}
+	window.requestAnimationFrame((timestamp) => {
+		startTime = timestamp;
+		window.requestAnimationFrame(animationStep);
+	});
+}
+// see how ratio changes from 0 to 1
+startAnimation(60 * 1000, render);
 
