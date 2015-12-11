@@ -4,7 +4,7 @@ module.exports = {
 
     devtool: 'source-map',
 
-    entry: './app/js/app.js',
+    entry: ['babel-polyfill', './app/js/app.js'],
 
     output: {
         path: path.resolve(__dirname, 'public'),
@@ -26,7 +26,11 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 exclude: /(node_modules|bower_components)/,
-                loader: 'babel'
+                loader: 'babel-loader',
+                query: {
+                    plugins: ['transform-runtime'],
+                    presets: ['es2015', 'stage-0', 'react'],
+                }
             },
 
             // {

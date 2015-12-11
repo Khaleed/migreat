@@ -3,7 +3,7 @@
 let d3 = require("d3");
 // turn GeoJSON into screen coordinates
 // the result is not tied down to a particular tiled map
-require("d3-geo-projection/d3.geo.projection.js"); // d3.geo will contain all extended pieces
+require("d3-geo-projection/d3.geo.projection"); // d3.geo will contain all extended pieces
 let worldMap = require("../../../../data/worldmap.json");
 let topojson = require("topojson");
 let isoCountries = require("i18n-iso-countries");
@@ -63,12 +63,11 @@ countries.append("path")
 let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).features;
 
 // {1: [300, 250], 2: [100, 200], 5: [120, 100]}
-let countriesToCentroids = countriesJSON.reduce((obj, d) => {
+export const countriesToCentroids = countriesJSON.reduce((obj, d) => {
 	let centroid = path.centroid(d);
 	return obj[d.id] = centroid;
 }, {});
 
-console.log(countriesJSON);
 let neighbors = topojson.neighbors(worldMap.objects.countries.geometries);
 // draw the map with the geoJSON data
 let cdata = countries.selectAll(".country")
