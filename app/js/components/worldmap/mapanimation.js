@@ -26,7 +26,7 @@ let getDistance = (latSource, longSource, latDest, longDest) => {
 };
 
 // physics vector - something pointing from one direction to another for the lat
-let unitVectorFromSrcToDest = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
+// let unitVectorFromSrcToDest = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
 // let condition = arrowLifeSpan * velocityInDegrees < distanceBetweenDestAndSrc
 
 // // this will provide coordinates of any arrow at any time
@@ -97,10 +97,20 @@ let drawArrows = (arrows, destination, screen) => {
 	const b = getCentroid(destination);
 	// we need a final object that looks like this:
 	// {iso: ratios} -> [{c, a, ratios}]
-	_.map(arrows, (ratios, iso) => {
+
+	// going through all the countries
+	let arrowCoordinates = _.flatten(_.map(arrows, (ratios, iso) => {
+		// going through all the arrows of a country
 		let a = getCentroid(iso);
-		return {a: a, c: bMinusA(a, b), ratios: ratios};
-	});
+		let c = bMinusA(a, b);
+		return _.map(ratios, (ratio) => {
+			return [a[0] + ratio*c[0] , a[1] + ratio*c[1]]
+		});
+	}));
+
+
+
+	console.log("Coords", arrowCoordinates);
 };
 // this will be called for the life cycles
 let startAnimation = (duration, callback) => { // callback -> higher order function
