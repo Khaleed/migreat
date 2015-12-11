@@ -1,6 +1,7 @@
 import { countriesToCentroids } from './map';
 let d3 = require("d3");
 require("d3-geo-projection/d3.geo.projection");
+let _ = require('underscore');
 // the code that will go into the requestAnimationFrame 
 // all countries are going to finish at the same time
 // the amount of arrows per second will be different
@@ -90,13 +91,15 @@ let bMinusA = (a, b) => {
 	return [b[0] - a[0], b[1] - a[1]];
 };
 
+// {iso: [0.1, 0.5]}
 let drawArrows = (arrows, destination, screen) => {
 	let ctx = screen.getContext('2d');
-	let b = getCentroid(destination);
-	let aS = Object.keys(arrows).map(getCentroid); // get keys of ISOs
-	// map originCentroid to the distanceFromSrcToDest using dest centroid as an argument
-	let distanceBetweenDestAndSrc = aS.map((a) => {
-		let c = bMinusA(a, b);
+	const b = getCentroid(destination);
+	// we need a final object that looks like this:
+	// {iso: ratios} -> [{c, a, ratios}]
+	_.map(arrows, (ratios, iso) => {
+		let a = getCentroid(iso);
+		return {a: a, c: bMinusA(a, b), ratios: ratios};
 	});
 };
 // this will be called for the life cycles
