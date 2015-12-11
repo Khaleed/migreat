@@ -1,22 +1,18 @@
-import {
-	countriesToCentroids
-}
-from './map';
+import { countriesToCentroids } from './map';
 let d3 = require("d3");
 require("d3-geo-projection/d3.geo.projection");
 // the code that will go into the requestAnimationFrame 
 // all countries are going to finish at the same time
 // the amount of arrows per second will be different
 let screen = document.getElementById('screen');
-
 const totalArrowTime = 60;
 const migrantsPerArrow = 400;
 const velocityInDegrees = 720;
 let migrantsPerCountry = 10000; // this is people migrating from a particular country to the USA
 let currentAnimationTime = 1; // this should be the current time - 0 when animation starts and 1 when it ends
 // ticks?
-let period = migrantsPerArrow / migrantsPerCountry // how much time between each arrow launch
-let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period // how long the arrow has been alive
+let period = migrantsPerArrow / migrantsPerCountry; // how much time between each arrow launch
+let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period;
 	// some coordinates in pixels
 	// let latSource = 45;
 	// let latDest = 0;
@@ -29,10 +25,7 @@ let getDistance = (latSource, longSource, latDest, longDest) => {
 };
 
 // physics vector - something pointing from one direction to another for the lat
-// let unitVectorFromSrcToDestLat = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
-// physics vector - something pointing from one direction to another for the long
-// let unitVectorFromSrcToDestLong = Math.pow(longDest - longSource, 2) / distanceBetweenDestAndSrc;
-
+let unitVectorFromSrcToDest = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
 // let condition = arrowLifeSpan * velocityInDegrees < distanceBetweenDestAndSrc
 
 // // this will provide coordinates of any arrow at any time
@@ -88,21 +81,23 @@ let render = (ratio) => {
 	// destinations[840]
 	drawArrows(arrows, 840, screen);
 };
-
+// takes ISO and returns it's centroid
 let getCentroid = iso => {
 	return countriesToCentroids[iso];
 };
 
+let bMinusA = (a, b) => {
+	return [b[0] - a[0], b[1] - a[1]];
+};
 
-let drawArrows = (arrowsPerOrigin, destination, screen) => {
+let drawArrows = (arrows, destination, screen) => {
 	let ctx = screen.getContext('2d');
-	let destCentroid = getCentroid(destination);
-	let originsCentroid = Object.keys(arrowsPerOrigin).map(getCentroid);
+	let b = getCentroid(destination);
+	let aS = Object.keys(arrows).map(getCentroid); // get keys of ISOs
 	// map originCentroid to the distanceFromSrcToDest using dest centroid as an argument
-	let distanceBetweenDestAndSrc = originsCentroid.map((centroid) => {
-		return getDistance(centroid[0], centroid[1], destCentroid[0], destCentroid[1])
+	let distanceBetweenDestAndSrc = aS.map((a) => {
+		let c = bMinusA(a, b);
 	});
-	console.log(distanceBetweenDestAndSrc);
 };
 // this will be called for the life cycles
 let startAnimation = (duration, callback) => { // callback -> higher order function
