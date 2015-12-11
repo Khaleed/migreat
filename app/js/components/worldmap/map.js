@@ -4,7 +4,7 @@ let d3 = require("d3");
 // turn GeoJSON into screen coordinates
 // the result is not tied down to a particular tiled map
 require("d3-geo-projection/d3.geo.projection.js"); // d3.geo will contain all extended pieces
-let worldMap = require("../../../../data/test-world-map.json");
+let worldMap = require("../../../../data/worldmap.json");
 let topojson = require("topojson");
 let isoCountries = require("i18n-iso-countries");
 // define the size of the map
