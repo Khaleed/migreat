@@ -107,10 +107,11 @@ let drawArrows = (arrows, destination, screen) => {
 			return [a[0] + ratio*c[0] , a[1] + ratio*c[1]]
 		});
 	}));
-
-
-
-	console.log("Coords", arrowCoordinates);
+	ctx.clearRect(0, 0, screen.width, screen.height);
+	ctx.fillStyle = "rgb(200, 0, 0)";
+	arrowCoordinates.forEach(c => {
+		ctx.fillRect(c[0], c[1], 1, 1);
+	});
 };
 // this will be called for the life cycles
 let startAnimation = (duration, callback) => { // callback -> higher order function
@@ -132,4 +133,4 @@ let startAnimation = (duration, callback) => { // callback -> higher order funct
 		});
 	}
 	// see how ratio changes from 0 to 1
-startAnimation(2 * 1000, render);
+startAnimation(20 * 1000, render);
