@@ -1,7 +1,7 @@
 import { countriesToCentroids } from './map';
 let d3 = require("d3");
 require("d3-geo-projection/d3.geo.projection");
-let _ = require('underscore');
+let _ = require('lodash');
 // the code that will go into the requestAnimationFrame 
 // all countries are going to finish at the same time
 // the amount of arrows per second will be different
