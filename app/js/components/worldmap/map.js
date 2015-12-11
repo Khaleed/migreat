@@ -25,7 +25,7 @@ let graticule = d3.geo.graticule();
 // append countries svg element
 let countries = d3.select("body")
 	.append("svg")
-	.attr("id", "map")
+	.attr("id", "worldmap")
 	.attr("width", width)
 	.attr("height", height);
 // tool tip for hovering countries
