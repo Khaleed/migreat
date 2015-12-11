@@ -1,11 +1,14 @@
-import { countriesToCentroids } from './map';
+import {
+	countriesToCentroids
+}
+from './map';
 let d3 = require("d3");
 require("d3-geo-projection/d3.geo.projection");
 // the code that will go into the requestAnimationFrame 
 // all countries are going to finish at the same time
 // the amount of arrows per second will be different
 let screen = document.getElementById('screen');
-let ctx = screen.getContext('2d');
+
 const totalArrowTime = 60;
 const migrantsPerArrow = 400;
 const velocityInDegrees = 720;
@@ -14,16 +17,21 @@ let currentAnimationTime = 1; // this should be the current time - 0 when animat
 // ticks?
 let period = migrantsPerArrow / migrantsPerCountry // how much time between each arrow launch
 let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period // how long the arrow has been alive
-// some coordinates in pixels
-let latSource = 45;
-let latDest = 0;
-let longSource = 90;
-let longDest = 0;
-let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
+	// some coordinates in pixels
+	// let latSource = 45;
+	// let latDest = 0;
+	// let longSource = 90;
+	// let longDest = 0;
+
+// let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
+let getDistance = (latSource, longSource, latDest, longDest) => {
+	return Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
+};
+
 // physics vector - something pointing from one direction to another for the lat
-let unitVectorFromSrcToDestLat = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
+// let unitVectorFromSrcToDestLat = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
 // physics vector - something pointing from one direction to another for the long
-let unitVectorFromSrcToDestLong = Math.pow(longDest - longSource, 2) / distanceBetweenDestAndSrc;
+// let unitVectorFromSrcToDestLong = Math.pow(longDest - longSource, 2) / distanceBetweenDestAndSrc;
 
 // let condition = arrowLifeSpan * velocityInDegrees < distanceBetweenDestAndSrc
 
@@ -74,22 +82,27 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 let render = (ratio) => {
 	// we need information about US and origins and ratio
 	let arrows = {
-		iso: [0.1, 0.2, 0.3, 0.4]
+		192: [0.1, 0.2, 0.3, 0.4]
 	};
 	// let arrows = getArrowsFromRatio(migrantsPerArrow, 840, ratio)
-	destinations[840]
-	drawArrows(arrows, 840);
+	// destinations[840]
+	drawArrows(arrows, 840, screen);
 };
 
 let getCentroid = iso => {
 	return countriesToCentroids[iso];
 };
 
-console.log('get centroid', getCentroid(192), countriesToCentroids);
 
-let drawArrows = (arrowsPerOrigin, destination) => {
+let drawArrows = (arrowsPerOrigin, destination, screen) => {
+	let ctx = screen.getContext('2d');
 	let destCentroid = getCentroid(destination);
 	let originsCentroid = Object.keys(arrowsPerOrigin).map(getCentroid);
+	// map originCentroid to the distanceFromSrcToDest using dest centroid as an argument
+	let distanceBetweenDestAndSrc = originsCentroid.map((centroid) => {
+		return getDistance(centroid[0], centroid[1], destCentroid[0], destCentroid[1])
+	});
+	console.log(distanceBetweenDestAndSrc);
 };
 // this will be called for the life cycles
 let startAnimation = (duration, callback) => { // callback -> higher order function
@@ -111,4 +124,4 @@ let startAnimation = (duration, callback) => { // callback -> higher order funct
 		});
 	}
 	// see how ratio changes from 0 to 1
-startAnimation(60 * 1000, render);
+startAnimation(2 * 1000, render);
