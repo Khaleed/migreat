@@ -65,8 +65,10 @@ let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).featu
 // {1: [300, 250], 2: [100, 200], 5: [120, 100]}
 export const countriesToCentroids = countriesJSON.reduce((obj, d) => {
 	let centroid = path.centroid(d);
-	return obj[d.id] = centroid;
+	obj[d.id] = centroid;
+	return obj;
 }, {});
+
 
 let neighbors = topojson.neighbors(worldMap.objects.countries.geometries);
 // draw the map with the geoJSON data

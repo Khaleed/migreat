@@ -3,7 +3,9 @@ let d3 = require("d3");
 require("d3-geo-projection/d3.geo.projection");
 // the code that will go into the requestAnimationFrame 
 // all countries are going to finish at the same time
-// what will be different will be the amount of arrows per second
+// the amount of arrows per second will be different
+let screen = document.getElementById('screen');
+let ctx = screen.getContext('2d');
 const totalArrowTime = 60;
 const migrantsPerArrow = 400;
 const velocityInDegrees = 720;
@@ -80,8 +82,10 @@ let render = (ratio) => {
 };
 
 let getCentroid = iso => {
-	// return centroid
+	return countriesToCentroids[iso];
 };
+
+console.log('get centroid', getCentroid(192), countriesToCentroids);
 
 let drawArrows = (arrowsPerOrigin, destination) => {
 	let destCentroid = getCentroid(destination);
