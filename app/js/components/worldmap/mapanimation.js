@@ -2,15 +2,17 @@ import { countriesToCentroids } from './map';
 let d3 = require("d3");
 require("d3-geo-projection/d3.geo.projection");
 let _ = require('lodash');
+
 // the code that will go into the requestAnimationFrame 
 // all countries are going to finish at the same time
 // the amount of arrows per second will be different
 let screen = document.getElementById('screen');
 const totalArrowTime = 60;
 const migrantsPerArrow = 400;
-const velocityInDegrees = 720;
+
 let migrantsPerCountry = 10000; // this is people migrating from a particular country to the USA
 let currentAnimationTime = 1; // this should be the current time - 0 when animation starts and 1 when it ends
+
 // ticks?
 let period = migrantsPerArrow / migrantsPerCountry; // how much time between each arrow launch
 let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period;
@@ -58,28 +60,27 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 		destinations = {
 			840: data
 		};
+			// see how ratio changes from 0 to 1
+		startAnimation(20 * 1000, render);
 	}
 });
 
-// let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
-// 	let destinationData = destinations[destinationISO];
-// 	Object.keys(destinationData).map((countryISO) => {
-// 		let totalImmigrantsFromCountry = destinationData[countryISO];
-// 		let numberOfArrows = totalImmigrantsFromCountry / migrantsPerArrow;
-// 		// we now need to use the ratio
+let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
+	let destinationsData = destinations[destinationISO];
+	Object.keys(destinationsData).map((countryISO) => {
+		let totalImmigrantsFromACountry = destinationsData[countryISO];
+		console.log(totalImmigrantsFromACountry);
+		let numberOfArrows = totalImmigrantsFromACountry / migrantsPerArrow;
+		// we need to return a list of arrows with ratios for each
 
-// 		// we need to return a list of arrows with ratios for each
-// 	});
-// }
+	});
+};
 
 // generate arrows and pass that to a draw function
 let render = (ratio) => {
 	// we need information about US and origins and ratio
-	let arrows = {
-		192: [0.1, 0.2, 0.3, 0.4]
-	};
-	// let arrows = getArrowsFromRatio(migrantsPerArrow, 840, ratio)
-	// destinations[840]
+	let arrows = getArrowsFromRatio(migrantsPerArrow, 840, ratio)
+	destinations[840]
 	drawArrows(arrows, 840, screen);
 };
 // takes ISO and returns it's centroid
@@ -108,9 +109,9 @@ let drawArrows = (arrows, destination, screen) => {
 		});
 	}));
 	ctx.clearRect(0, 0, screen.width, screen.height);
-	ctx.fillStyle = "rgb(200, 0, 0)";
+	ctx.fillStyle = "";
 	arrowCoordinates.forEach(c => {
-		ctx.fillRect(c[0], c[1], 1, 1);
+		ctx.fillRect(c[0], c[1], 50, 50);
 	});
 };
 // this will be called for the life cycles
@@ -132,5 +133,3 @@ let startAnimation = (duration, callback) => { // callback -> higher order funct
 			window.requestAnimationFrame(animationStep);
 		});
 	}
-	// see how ratio changes from 0 to 1
-startAnimation(20 * 1000, render);
