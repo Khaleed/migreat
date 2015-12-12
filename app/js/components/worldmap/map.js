@@ -110,15 +110,16 @@ countries.insert("path", ".graticule")
 let svgCentroids = countries.selectAll("bar")
 	.data(countriesJSON)
 	.enter()
-	.append('rect')
-	.attr('width', 10)
-	.attr('height', d => {
-		// console.log(path.centroid(d));
-		return 25;
-	})
-	.attr("x", d => path.centroid(d)[0])
-	.attr("y", d => path.centroid(d)[1])
-	.style("visibility", d => (d.id == 840) ? 'visible' : 'hidden');
+	.append('circle')
+	// .attr('width', 10)
+	// .attr('height', d => {
+	// 	// console.log(path.centroid(d));
+	// 	return 25;
+	// })
+	.attr("cx", d => path.centroid(d)[0])
+	.attr("cy", d => path.centroid(d)[1])
+	.attr("r", 1);
+	// .style("visibility", d => (d.id == 840) ? 'visible' : 'hidden');
 
 // zooming and panning a map
 // behaviour acts as event listeners

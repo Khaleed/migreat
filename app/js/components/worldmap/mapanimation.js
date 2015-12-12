@@ -5,7 +5,7 @@ let _ = require('lodash');
 
 // the code that will go into the requestAnimationFrame 
 // all countries are going to finish at the same time
-// the amount of arrows per second will be different
+// the amount of arrows per second will be different for each country
 let screen = document.getElementById('screen');
 const totalArrowTime = 60;
 const migrantsPerArrow = 400;
@@ -16,16 +16,16 @@ let currentAnimationTime = 1; // this should be the current time - 0 when animat
 // ticks?
 let period = migrantsPerArrow / migrantsPerCountry; // how much time between each arrow launch
 let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period;
-	// some coordinates in pixels
-	// let latSource = 45;
-	// let latDest = 0;
-	// let longSource = 90;
-	// let longDest = 0;
+// some coordinates in pixels
+// let latSource = 45;
+// let latDest = 0;
+// let longSource = 90;
+// let longDest = 0;
 
 // let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
-let getDistance = (latSource, longSource, latDest, longDest) => {
-	return Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
-};
+// let getDistance = (latSource, longSource, latDest, longDest) => {
+// 	return Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
+// };
 
 // physics vector - something pointing from one direction to another for the lat
 // let unitVectorFromSrcToDest = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
@@ -50,9 +50,9 @@ let getDistance = (latSource, longSource, latDest, longDest) => {
 // [destinationISO: {
 //      originISO: totalImmigrants 
 // }]
-// load data
 
 let destinations = null;
+// load data
 let immigrationData = d3.csv("us2013.csv", (error, data) => {
 	if (error) {
 		console.error(error);
@@ -60,26 +60,29 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 		destinations = {
 			840: data
 		};
-			// see how ratio changes from 0 to 1
+		// see how ratio changes from 0 to 1
 		startAnimation(20 * 1000, render);
 	}
 });
 
-let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
-	let destinationsData = destinations[destinationISO];
-	Object.keys(destinationsData).map((countryISO) => {
-		let totalImmigrantsFromACountry = destinationsData[countryISO];
-		console.log(totalImmigrantsFromACountry);
-		let numberOfArrows = totalImmigrantsFromACountry / migrantsPerArrow;
-		// we need to return a list of arrows with ratios for each
+// let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
+// 	let destinationsData = destinations[destinationISO];
+// 	Object.keys(destinationsData).map((countryISO) => {
+// 		let totalImmigrantsFromACountry = destinationsData[countryISO];
+// 		console.log(totalImmigrantsFromACountry);
+// 		let numberOfArrows = totalImmigrantsFromACountry / migrantsPerArrow;
+// 		// we need to return a list of arrows with ratios for each
 
-	});
-};
+// 	});
+// };
 
 // generate arrows and pass that to a draw function
 let render = (ratio) => {
 	// we need information about US and origins and ratio
-	let arrows = getArrowsFromRatio(migrantsPerArrow, 840, ratio)
+	let arrows = {
+		192: [0, 0.1, 0.2, 0.3, 0.4, 0.6, 0.8, 1]
+	};
+	// let arrows = getArrowsFromRatio(migrantsPerArrow, 840, ratio)
 	destinations[840]
 	drawArrows(arrows, 840, screen);
 };
@@ -105,31 +108,34 @@ let drawArrows = (arrows, destination, screen) => {
 		let a = getCentroid(iso);
 		let c = bMinusA(a, b);
 		return _.map(ratios, (ratio) => {
-			return [a[0] + ratio*c[0] , a[1] + ratio*c[1]]
+			return [a[0] + ratio * c[0], a[1] + ratio * c[1]]
 		});
 	}));
+
 	ctx.clearRect(0, 0, screen.width, screen.height);
-	ctx.fillStyle = "";
+	ctx.fillStyle = "brown";
+	// recursive function instead of forEach
 	arrowCoordinates.forEach(c => {
-		ctx.fillRect(c[0], c[1], 50, 50);
+		ctx.fillRect(c[0], c[1], 1, 1);
 	});
 };
+
 // this will be called for the life cycles
 let startAnimation = (duration, callback) => { // callback -> higher order function
-		// the callback decouples ticks from time
-		let startTime = null;
-		// called every time animation continues going
-		let animationStep = (timestamp) => {
-			let currentTime = timestamp;
-			// when to continue animation
-			if (currentTime - startTime <= duration) {
-				let ratio = (currentTime - startTime) / duration;
-				callback(ratio);
-				window.requestAnimationFrame(animationStep);
-			}
-		}
-		window.requestAnimationFrame((timestamp) => {
-			startTime = timestamp;
+	// the callback decouples ticks from time
+	let startTime = null;
+	// called every time animation continues going
+	let animationStep = (timestamp) => {
+		let currentTime = timestamp;
+		// when to continue animation
+		if (currentTime - startTime <= duration) {
+			let ratio = (currentTime - startTime) / duration;
+			callback(ratio);
 			window.requestAnimationFrame(animationStep);
-		});
+		}
 	}
+	window.requestAnimationFrame((timestamp) => {
+		startTime = timestamp;
+		window.requestAnimationFrame(animationStep);
+	});
+};
