@@ -1,4 +1,7 @@
-import { countriesToCentroids } from './map';
+import {
+	countriesToCentroids
+}
+from './map';
 let d3 = require("d3");
 require("d3-geo-projection/d3.geo.projection");
 let _ = require('lodash');
@@ -9,23 +12,17 @@ let _ = require('lodash');
 let screen = document.getElementById('screen');
 const totalArrowTime = 60;
 const migrantsPerArrow = 400;
+// # ratio/60 seconds ->
 
+// speed is in pixels per second
+let speed = 20;
 let migrantsPerCountry = 10000; // this is people migrating from a particular country to the USA
 let currentAnimationTime = 1; // this should be the current time - 0 when animation starts and 1 when it ends
 
-// ticks?
-let period = migrantsPerArrow / migrantsPerCountry; // how much time between each arrow launch
-let arrowLifeSpan = currentAnimationTime - Math.floor(currentAnimationTime / period) * period;
-// some coordinates in pixels
-// let latSource = 45;
-// let latDest = 0;
-// let longSource = 90;
-// let longDest = 0;
-
 // let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
-// let getDistance = (latSource, longSource, latDest, longDest) => {
-// 	return Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
-// };
+let getDistance = (latSource, longSource, latDest, longDest) => {
+	return Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
+};
 
 // physics vector - something pointing from one direction to another for the lat
 // let unitVectorFromSrcToDest = Math.pow(latDest - latSource, 2) / distanceBetweenDestAndSrc;
@@ -65,16 +62,32 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 	}
 });
 
-// let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
-// 	let destinationsData = destinations[destinationISO];
-// 	Object.keys(destinationsData).map((countryISO) => {
-// 		let totalImmigrantsFromACountry = destinationsData[countryISO];
-// 		console.log(totalImmigrantsFromACountry);
-// 		let numberOfArrows = totalImmigrantsFromACountry / migrantsPerArrow;
-// 		// we need to return a list of arrows with ratios for each
+let currentArrowsBeingAnimated = {
+	iso: [0.]
+};
 
-// 	});
-// };
+let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
+	let migrantsData = destinations[destinationISO];
+	const b = getCentroid(destinationISO);
+	Object.keys(migrantsData).map((countryISO) => {
+		let totalImmigrantsFromACountry = migrantsData[countryISO];
+		// console.log(totalImmigrantsFromACountry);
+		let a = getCentroid(countryISO);
+		let distance = getDistance(a[0], a[1], b[0], b[1]);
+		// how to add the speed???????
+		// for that you need a list of generated arrows...
+
+		let numberOfArrows = totalImmigrantsFromACountry / migrantsPerArrow;
+		// the time between arrows
+		let T = 1 / numberOfArrows;
+		let period = migrantsPerArrow / totalImmigrantsFromACountry; // how much time between each arrow launch
+		let arrowLifeSpan = ratio - Math.floor(ratio / T) * T;
+
+
+		// we need to return a list of arrows with ratios for each
+		getDistance();
+	});
+};
 
 // generate arrows and pass that to a draw function
 let render = (ratio) => {
