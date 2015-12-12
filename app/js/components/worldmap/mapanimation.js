@@ -11,12 +11,11 @@ let _ = require('lodash');
 // the amount of arrows per second will be different for each country
 let screen = document.getElementById('screen');
 const totalArrowTime = 60;
-const migrantsPerArrow = 400;
-// # ratio/60 seconds ->
+const migrantsPerArrow = 40000;
 
 // speed is in pixels per second
 let speed = 20;
-let migrantsPerCountry = 10000; // this is people migrating from a particular country to the USA
+let migrantsPerCountry = 100000; // this is people migrating from a particular country to the USA
 let currentAnimationTime = 1; // this should be the current time - 0 when animation starts and 1 when it ends
 
 // let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
@@ -58,12 +57,62 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 			840: data
 		};
 		// see how ratio changes from 0 to 1
-		startAnimation(20 * 1000, render);
+
+		// the problem is that now we need different timeouts for each country since
+		// they are going to be producing arrows at different rates
+		// 
+
+		let duration = 20 * 1000;
+		let canvas = new fabric.Canvas('screen');
+
+		_.map(destinations[840], (countryData) => {
+			let nOfImmigrants = countryData.value;
+			let countryISO = countryData.iso;
+
+			let destinationISO = 840;
+			let nOfArrows = nOfImmigrants / migrantsPerArrow;
+			let rate = duration / nOfArrows;
+
+			let step = () => {
+				const b = getCentroid(destinationISO);
+				let a = getCentroid(countryISO);
+
+				var circle = new fabric.Rect({
+					width: 2,
+					height: 2,
+					left: a[0],
+					top: a[1],
+					stroke: '#aaf',
+					strokeWidth: 1,
+					fill: '#faa',
+					selectable: false
+				});
+				canvas.add(circle);
+				circle.animate({ left: b[0], top: b[1] }, {
+					duration: rate,
+					onChange: canvas.renderAll.bind(canvas),
+					onComplete: function() {
+						// add migrantsPerArrow to the bar
+					}
+					// easing: fabric.util.ease[document.getElementById('easing').value]
+				});
+
+				console.log("number of arrows", nOfArrows, rate);
+				nOfArrows -= 1;
+				if (nOfArrows > 0) {
+					setTimeout(step, rate);
+				}
+			}
+
+			step();
+		});
+
+		// startAnimation(20 * 1000, render);
 	}
 });
 
 let currentArrowsBeingAnimated = {
-	iso: [0.]
+	iso: [0]
 };
 
 let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
@@ -92,9 +141,9 @@ let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
 // generate arrows and pass that to a draw function
 let render = (ratio) => {
 	// we need information about US and origins and ratio
-	let arrows = {
-		192: [0, 0.1, 0.2, 0.3, 0.4, 0.6, 0.8, 1]
-	};
+	// let arrows = {
+	// 	192: [0, 0.1, 0.2, 0.3, 0.4, 0.6, 0.8, 1]
+	// };
 	// let arrows = getArrowsFromRatio(migrantsPerArrow, 840, ratio)
 	destinations[840]
 	drawArrows(arrows, 840, screen);
