@@ -9,10 +9,10 @@ const totalArrowTime = 60;
 const migrantsPerArrow = 400;
 let migrantsPerCountry = 10000; 
 
-// let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
-let getDistance = (latSource, longSource, latDest, longDest) => {
-	return Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
-};
+// // let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
+// let getDistance = (latSource, longSource, latDest, longDest) => {
+// 	return Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
+// };
 
 let destinations = null;
 // load data
@@ -28,37 +28,40 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 	}
 });
 
-let currentArrowsBeingAnimated = {
- 	iso: [0.]
-};
+// let currentArrowsBeingAnimated = {
+//  	iso: [0.1, 0.2]
+// };
 
-let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
-	let migrantsData = destinations[destinationISO];
-	const b = getCentroid(destinationISO);
-	Object.keys(migrantsData).map((countryISO) => {
-		let totalImmigrantsFromACountry = migrantsData[countryISO];
-		let a = getCentroid(countryISO);
-		let distance = getDistance(a[0], a[1], b[0], b[1]);
-		// how to add the speed???????
-		// for that you need a list of generated arrows...
-
-		let numberOfArrows = totalImmigrantsFromACountry / migrantsPerArrow;
-		// the time between arrows
-		let T = 1 / numberOfArrows;
-		let period = migrantsPerArrow / totalImmigrantsFromACountry; // how much time between each arrow launch
-		let arrowLifeSpan = ratio - Math.floor(ratio / T) * T;
+// let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
+// 	let migrantsData = destinations[destinationISO];
+// 	const b = getCentroid(destinationISO);
+// 	Object.keys(migrantsData).map((countryISO) => {
+// 		let totalImmigrantsFromACountry = migrantsData[countryISO];
+// 		let a = getCentroid(countryISO);
+// 		let distance = getDistance(a[0], a[1], b[0], b[1]);
+// 		// how to add the speed???????
+// 		// for that you need a list of generated arrows...
 
 
-		// we need to return a list of arrows with ratios for each
-		getDistance();
-	});
-};
+// 		let numberOfArrows = totalImmigrantsFromACountry / migrantsPerArrow;
+// 		// the time between arrows
+// 		let T = 1 / numberOfArrows;
+// 		let period = migrantsPerArrow / totalImmigrantsFromACountry; // how much time between each arrow launch
+// 		let arrowLifeSpan = ratio - Math.floor(ratio / T) * T;
+
+
+// 		// we need to return a list of arrows with ratios for each
+// 		getDistance();
+// 	});
+// };
 
 // generate arrows and pass that to a draw function
 let render = (ratio) => {
+//	console.log(ratio);
 	// we need information about US and origins and ratio
 	let arrows = {
-		192: [0, 0.1, 0.2, 0.3, 0.4, 0.6, 0.8, 1]
+		192: [ratio]
+//		192: [0, 0.1, 0.2, 0.3, 0.4, 0.6, 0.8, 1] // -> this data is mock/dummy -> instead of this I need to use
 	};
 	// let arrows = getArrowsFromRatio(migrantsPerArrow, 840, ratio)
 	destinations[840]
@@ -94,7 +97,7 @@ let drawArrows = (arrows, destination, screen) => {
 	ctx.fillStyle = "brown";
 	// recursive function instead of forEach
 	arrowCoordinates.forEach(c => {
-		ctx.fillRect(c[0], c[1], 1, 1);
+		ctx.fillRect(c[0], c[1], 10, 10);
 	});
 };
 

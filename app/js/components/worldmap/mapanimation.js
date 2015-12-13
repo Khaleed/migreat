@@ -40,7 +40,7 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 					height: 2,
 					left: a[0],
 					top: a[1],
-					stroke: 'white',
+					stroke: 'black',
 					strokeWidth: 5,
 					fill: 'green',
 					selectable: false
