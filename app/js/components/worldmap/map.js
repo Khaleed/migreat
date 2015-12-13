@@ -118,7 +118,7 @@ let svgCentroids = countries.selectAll("bar")
 	// })
 	.attr("cx", d => path.centroid(d)[0])
 	.attr("cy", d => path.centroid(d)[1])
-	.attr("r", 1);
+	.attr("")
 	// .style("visibility", d => (d.id == 840) ? 'visible' : 'hidden');
 
 // zooming and panning a map
