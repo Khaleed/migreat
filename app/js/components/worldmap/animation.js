@@ -3,6 +3,8 @@ import { countriesToCentroids } from './map';
 let d3 = require("d3");
 let _ = require('lodash');
 
+window.requestAnimationFrames = [];
+
 // grab main variables
 let screen = document.getElementById('screen');
 const totalArrowTime = 60;
@@ -11,7 +13,7 @@ const migrantsPerArrow = 40000;
 // deal with the destinations stuff
 let destinations = null;
 
-let immigrationData = d3.csv("us2013.csv", (error, data) => { 
+let immigrationData = d3.csv("us2013.csv", (error, data) => {
 	if (error) {
 		console.error(error);
 	} else {
@@ -49,9 +51,10 @@ let render = (fractionThroughTime, countryId) => {
 	let migrantsData = destinations[840];
 	// handle logic for each country
 	if (countryId) {
-		migrantsData = {countryId: migrantsData[countryId]};
+		migrantsData = {
+			countryId: migrantsData[countryId]
+		};
 	}
-	
 	let arrows = _.reduce(migrantsData, (arrows, originCountry) => {
 		// we need information about US and origins and fractionThroughTime
 		let migrantsPerCountry = originCountry.value;
@@ -64,7 +67,7 @@ let render = (fractionThroughTime, countryId) => {
 			}
 			return list;
 		}, []);
-		return arrows; 
+		return arrows;
 	}, {});
 	drawArrows(arrows, 840, screen);
 };
@@ -115,29 +118,33 @@ let startAnimation = (duration, callback) => { // callback -> higher order funct
 	// the callback decouples ticks from time
 	let startTime = null;
 	// called every time animation continues going
-	let animationStep = (timestamp) => {
+	let animationStep = timestamp => {
 		let currentTime = timestamp;
 		// when to continue animation
 		if (currentTime - startTime <= duration) {
-			let ratio = (currentTime - startTime) / duration;
-			callback(ratio);
-			window.requestAnimationFrame(animationStep);
+			let fraction = (currentTime - startTime) / duration;
+			callback(fraction);
+			window.requestAnimationFrames.push(window.requestAnimationFrame(animationStep));
 		}
 	}
-	window.requestAnimationFrame((timestamp) => {
+	window.requestAnimationFrames.push(window.requestAnimationFrame(timestamp => {
 		startTime = timestamp;
-		window.requestAnimationFrame(animationStep);
-	});
+		window.requestAnimationFrames.push(window.requestAnimationFrame(animationStep));
+	}));
 };
 
 // create a function -> get a reference of the svg event and listen to it
-
-
-
+document.addEventListener("hoveringCountry", e => {
+	console.log(e.detail);
+	// 
+	_.map(window.requestAnimationFrames, (currentFrame) => {
+		console.log(currentFrame);
+	})
+	window.cancelAnimationFrame(window.requestAnimationId);
+	window.requestAnimationFrame = undefined;
+});
 // stop the current animation function 
 
 
 
 // call render passing -> country ID, fractionThroughTime
-
-

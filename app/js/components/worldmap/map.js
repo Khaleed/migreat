@@ -65,7 +65,6 @@ let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).featu
 
 // {1: [300, 250], 2: [100, 200], 5: [120, 100]}
 export const countriesToCentroids = countriesJSON.reduce((obj, d) => {
-	console.log("centroid data", d);
 	// console.log("object to reduce", obj);
 	let centroid = path.centroid(d);
 	obj[d.id] = centroid;
@@ -74,15 +73,17 @@ export const countriesToCentroids = countriesJSON.reduce((obj, d) => {
 
 let neighbors = topojson.neighbors(worldMap.objects.countries.geometries);
 // draw the map with the geoJSON data
-let cdata = countries.selectAll(".country")
+let countryData = countries.selectAll(".country")
 	.data(countriesJSON)
 	.enter()
 	.append("g");
 
 let lastHoveredCountry = null;
 // tooltips
-cdata.on("mousemove", function(d, i) {
-	// create event and dispath it ->  send only -> d.id
+countryData.on("mousemove", function(d, i) {
+	// create a custome event and dispatch it ->  send only -> d.id
+	lastHoveredCountry = new CustomEvent("hoveringCountry", {detail: d.id, bubbles: true, cancelable: true});
+ 	document.getElementById("worldmap").dispatchEvent(lastHoveredCountry);
 
 		let mouse = d3.mouse(countries.node()).map(function(d) {
 			return parseInt(d);
@@ -95,7 +96,7 @@ cdata.on("mousemove", function(d, i) {
 		tooltip.classed("hidden", true)
 	});
 // append each country and give it a color 
-cdata.append("path", ".graticule")
+countryData.append("path", ".graticule")
 	.attr("d", path)
 	.attr("class", "country")
 	.style("fill", (d, i) => {
