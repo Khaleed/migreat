@@ -22,7 +22,6 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 		destinations = {
 			840: data
 		};
-		// see how ratio changes from 0 to 1
 		startAnimation(20 * 1000, render);
 	}
 });
@@ -50,13 +49,23 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 // generate arrows and pass that to a draw function
 let render = (fractionThroughTime, countryId) => {
 	// loop through countries here
-	let migrantsData = destinations[840];
+	let migrantsData;
+	if (countryId) {
+		migrantsData = [];
+	} else {
+		migrantsData = destinations[840];	
+	}
+	
 	// handle logic for each country
 	if (countryId) {
-		migrantsData = {
-			countryId: migrantsData[countryId]
-		};
+		// migrantsData = {
+		// 	countryId: migrantsData[countryId]
+		// };
+		migrantsData = destinations[840].filter(function(elem){
+			return elem.iso === countryId.toString();
+		});
 	}
+	
 	let arrows = _.reduce(migrantsData, (arrows, originCountry) => {
 		// we need information about US and origins and fractionThroughTime
 		let migrantsPerCountry = originCountry.value;
@@ -95,8 +104,7 @@ let clearCanvas = () => {
 }
 
 // {iso: [0.1, 0.5]}
-let drawArrows = (arrows, destination, screen) => {
-	let ctx = screen.getContext('2d');
+let drawArrows = (arrows, destination) => {
 	const b = getCentroid(destination);
 	// we need a final object that looks like this:
 	// {iso: ratios} -> [{c, a, ratios}]
@@ -120,7 +128,7 @@ let drawArrows = (arrows, destination, screen) => {
 };
 
 // this will be called for the life cycles
-let startAnimation = (duration, callback) => { // callback -> higher order function
+let startAnimation = (duration, callback, ...params) => { // callback -> higher order function
 	// the callback decouples ticks from time
 	let startTime = null;
 	// called every time animation continues going
@@ -129,7 +137,7 @@ let startAnimation = (duration, callback) => { // callback -> higher order funct
 		// when to continue animation
 		if (currentTime - startTime <= duration) {
 			let fraction = (currentTime - startTime) / duration;
-			callback(fraction);
+			callback.apply(null, [fraction].concat(params));
 			window.requestAnimationFrames.push(window.requestAnimationFrame(animationStep));
 		}
 	}
@@ -141,16 +149,15 @@ let startAnimation = (duration, callback) => { // callback -> higher order funct
 
 // create a function -> get a reference of the svg event and listen to it
 document.addEventListener("hoveringCountry", e => {
-	console.log(e.detail);
 	// 
 	_.map(window.requestAnimationFrames, (currentFrame) => {
-		console.log(currentFrame);
+		window.cancelAnimationFrame(currentFrame);
+		currentFrame = undefined;
 	})
-	window.cancelAnimationFrame(window.requestAnimationId);
-	window.requestAnimationFrame = undefined;
-
 	clearCanvas();
+	startAnimation(20*1000, render, e.detail);
 });
+
 // stop the current animation function 
 
 
