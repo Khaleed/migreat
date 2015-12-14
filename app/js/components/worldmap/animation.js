@@ -1,21 +1,21 @@
-// grab modules
+// grab stuff from modules
 import { countriesToCentroids } from './map';
 let d3 = require("d3");
 let _ = require('lodash');
 
-// grab variables for life cycles
+// grab main variables
 let screen = document.getElementById('screen');
 const totalArrowTime = 60;
 const migrantsPerArrow = 40000;
 
+// deal with the destinations stuff
 let destinations = null;
-// load data
+
 let immigrationData = d3.csv("us2013.csv", (error, data) => { 
 	if (error) {
 		console.error(error);
 	} else {
 		destinations = {
-			// US
 			840: data
 		};
 		// see how ratio changes from 0 to 1
@@ -47,6 +47,7 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 let render = (fractionThroughTime, countryId) => {
 	// loop through countries here
 	let migrantsData = destinations[840];
+	// handle logic for each country
 	if (countryId) {
 		migrantsData = {countryId: migrantsData[countryId]};
 	}
@@ -130,6 +131,7 @@ let startAnimation = (duration, callback) => { // callback -> higher order funct
 };
 
 // create a function -> get a reference of the svg event and listen to it
+
 
 
 // stop the current animation function 

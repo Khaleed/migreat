@@ -16,8 +16,8 @@ let color = d3.scale.category20();
 let projection = d3.geo.naturalEarth()
 	.scale(170)
 	.translate([width / 2, height / 2])
-	.precision(0.1)
-	// path generator to identify a project type
+	.precision(0.1) // geometric precision over speed and crisp edgess
+// create new geo path generator
 let path = d3.geo.path()
 	.projection(projection);
 // geometry object representing all meridians and parallels for this graticule (basically for the grid lines).
@@ -36,7 +36,7 @@ let tooltip = d3.select("body")
 let offsetL = document.body.offsetLeft + 40;
 let offsetT = document.body.offsetTop + 20;
 // create and append new elements
-// SVG allows graphical objects to be defined for later reuse.
+// SVG allows graphical objects to be defined for later reuse
 countries.append("defs")
 	.append("path")
 	.datum({
@@ -54,6 +54,7 @@ countries.append("use")
 	.attr("class", "fill")
 	.attr("xlink:href", "#sphere"); // refer to href attr to the xlink namespace
 
+// display multiple features -> polygons and multi-polygons
 countries.append("path")
 	.datum(graticule)
 	.attr("class", "graticule")
@@ -64,11 +65,12 @@ let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).featu
 
 // {1: [300, 250], 2: [100, 200], 5: [120, 100]}
 export const countriesToCentroids = countriesJSON.reduce((obj, d) => {
+	console.log("centroid data", d);
+	// console.log("object to reduce", obj);
 	let centroid = path.centroid(d);
 	obj[d.id] = centroid;
 	return obj;
 }, {});
-
 
 let neighbors = topojson.neighbors(worldMap.objects.countries.geometries);
 // draw the map with the geoJSON data
@@ -81,6 +83,7 @@ let lastHoveredCountry = null;
 // tooltips
 cdata.on("mousemove", function(d, i) {
 	// create event and dispath it ->  send only -> d.id
+
 		let mouse = d3.mouse(countries.node()).map(function(d) {
 			return parseInt(d);
 		});
@@ -91,11 +94,10 @@ cdata.on("mousemove", function(d, i) {
 	.on("mouseout", function(d, i) {
 		tooltip.classed("hidden", true)
 	});
-// fill the map with colors 
+// append each country and give it a color 
 cdata.append("path", ".graticule")
 	.attr("d", path)
 	.attr("class", "country")
-	// 
 	.style("fill", (d, i) => {
 		return color(d.color = d3.max(neighbors[i], n => {
 			return countriesJSON[n].color;
@@ -108,20 +110,20 @@ countries.insert("path", ".graticule")
 	}))
 	.attr("class", "boundary")
 	.attr("d", path);
-// find centroids of each country
-let svgCentroids = countries.selectAll("bar")
-	.data(countriesJSON)
-	.enter()
-	.append('circle')
-	// .attr('width', 10)
-	// .attr('height', d => {
-	// 	// console.log(path.centroid(d));
-	// 	return 25;
-	// })
-	.attr("cx", d => path.centroid(d)[0])
-	.attr("cy", d => path.centroid(d)[1])
-	.attr("")
-	// .style("visibility", d => (d.id == 840) ? 'visible' : 'hidden');
+// // find centroids of each country
+// let svgCentroids = countries.selectAll("bar")
+// 	.data(countriesJSON)
+// 	.enter()
+// 	.append('circle')
+// 	// .attr('width', 10)
+// 	// .attr('height', d => {
+// 	// 	// console.log(path.centroid(d));
+// 	// 	return 25;
+// 	// })
+// 	.attr("cx", d => path.centroid(d)[0])
+// 	.attr("cy", d => path.centroid(d)[1])
+// 	.attr("")
+// 	// .style("visibility", d => (d.id == 840) ? 'visible' : 'hidden');
 
 // zooming and panning a map
 // behaviour acts as event listeners
@@ -129,6 +131,7 @@ let zoom = d3.behavior.zoom()
 	.on("zoom", function() {
 		countries.attr("transform", "translate(" +
 			d3.event.translate.join(",") + ")scale(" + d3.event.scale + ")"); // currently not working
+		// create multiple distinct paths
 		countries.selectAll("path")
 			.attr("d", path.projection(projection));
 	});
