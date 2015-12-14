@@ -7,6 +7,8 @@ window.requestAnimationFrames = [];
 
 // grab main variables
 let screen = document.getElementById('screen');
+let ctx = screen.getContext('2d');
+
 const totalArrowTime = 60;
 const migrantsPerArrow = 40000;
 
@@ -88,6 +90,10 @@ let bMinusA = (a, b) => {
 	return [b[0] - a[0], b[1] - a[1]];
 };
 
+let clearCanvas = () => {
+	ctx.clearRect(0, 0, screen.width, screen.height);
+}
+
 // {iso: [0.1, 0.5]}
 let drawArrows = (arrows, destination, screen) => {
 	let ctx = screen.getContext('2d');
@@ -105,7 +111,7 @@ let drawArrows = (arrows, destination, screen) => {
 		});
 	}));
 
-	ctx.clearRect(0, 0, screen.width, screen.height);
+	clearCanvas();
 	ctx.fillStyle = "brown";
 	// recursive function instead of forEach
 	arrowCoordinates.forEach(c => {
@@ -142,6 +148,8 @@ document.addEventListener("hoveringCountry", e => {
 	})
 	window.cancelAnimationFrame(window.requestAnimationId);
 	window.requestAnimationFrame = undefined;
+
+	clearCanvas();
 });
 // stop the current animation function 
 
