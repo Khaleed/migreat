@@ -46,6 +46,8 @@ div.tooltip {
 
 #screen {
   z-index: 999;
+  /* disables mousevents for this element*/
+  pointer-events: none; 
   position: absolute;
   top: 0;
   left: 0;

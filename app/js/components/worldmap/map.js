@@ -77,8 +77,10 @@ let cdata = countries.selectAll(".country")
 	.enter()
 	.append("g");
 
+let lastHoveredCountry = null;
 // tooltips
 cdata.on("mousemove", function(d, i) {
+	// create event and dispath it ->  send only -> d.id
 		let mouse = d3.mouse(countries.node()).map(function(d) {
 			return parseInt(d);
 		});

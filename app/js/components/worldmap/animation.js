@@ -44,9 +44,13 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 // };
 
 // generate arrows and pass that to a draw function
-let render = fractionThroughTime => {
+let render = (fractionThroughTime, countryId) => {
 	// loop through countries here
 	let migrantsData = destinations[840];
+	if (countryId) {
+		migrantsData = {countryId: migrantsData[countryId]};
+	}
+	
 	let arrows = _.reduce(migrantsData, (arrows, originCountry) => {
 		// we need information about US and origins and fractionThroughTime
 		let migrantsPerCountry = originCountry.value;
@@ -124,3 +128,14 @@ let startAnimation = (duration, callback) => { // callback -> higher order funct
 		window.requestAnimationFrame(animationStep);
 	});
 };
+
+// create a function -> get a reference of the svg event and listen to it
+
+
+// stop the current animation function 
+
+
+
+// call render passing -> country ID, fractionThroughTime
+
+
