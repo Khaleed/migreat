@@ -1,13 +1,16 @@
 // grab modules
-import { countriesToCentroids } from './map';
+import {
+	countriesToCentroids
+}
+from './map';
 let d3 = require("d3");
 let _ = require('lodash');
 
 // grab variables for life cycles
 let screen = document.getElementById('screen');
 const totalArrowTime = 60;
-const migrantsPerArrow = 400;
-let migrantsPerCountry = 10000; 
+const migrantsPerArrow = 4000;
+let migrantsPerCountry = 10000;
 
 // // let distanceBetweenDestAndSrc = Math.sqrt(Math.pow(latSource - latDest, 2) + Math.pow(longSource - longDest, 2));
 // let getDistance = (latSource, longSource, latDest, longDest) => {
@@ -50,20 +53,29 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 // 		let arrowLifeSpan = ratio - Math.floor(ratio / T) * T;
 
 
-// 		// we need to return a list of arrows with ratios for each
+// 		// we need to return a list of arrows with fractionsAlongPath for each
 // 		getDistance();
 // 	});
 // };
 
 // generate arrows and pass that to a draw function
-let render = (ratio) => {
-//	console.log(ratio);
-	// we need information about US and origins and ratio
+let render = (fractionThroughTime) => {
+	//	console.log(fractionThroughTime);
+	// we need information about US and origins and fractionThroughTime
+	let fractionsAlongPath = [];
+	let points = migrantsPerCountry / migrantsPerArrow;
+	for (let i = 0; i < points; i += 1) {
+		let fraction = i / points + fractionThroughTime;
+		if (fraction < 1) {
+			fractionsAlongPath.push(fraction);
+		}
+	}
 	let arrows = {
-		192: [ratio]
-//		192: [0, 0.1, 0.2, 0.3, 0.4, 0.6, 0.8, 1] // -> this data is mock/dummy -> instead of this I need to use
+		//		192: [fractionThroughTime]
+		192: fractionsAlongPath
+			//		192: [0, 0.1, 0.2, 0.3, 0.4, 0.6, 0.8, 1] // -> this data is mock/dummy -> instead of this I need to use
 	};
-	// let arrows = getArrowsFromRatio(migrantsPerArrow, 840, ratio)
+	// let arrows = getArrowsFromRatio(migrantsPerArrow, 840, fractionThroughTime)
 	destinations[840]
 	drawArrows(arrows, 840, screen);
 };
@@ -84,12 +96,12 @@ let drawArrows = (arrows, destination, screen) => {
 	// {iso: ratios} -> [{c, a, ratios}]
 
 	// going through all the countries
-	let arrowCoordinates = _.flatten(_.map(arrows, (ratios, iso) => {
+	let arrowCoordinates = _.flatten(_.map(arrows, (fractionsAlongPath, iso) => {
 		// going through all the arrows of a country
 		let a = getCentroid(iso);
 		let c = bMinusA(a, b);
-		return _.map(ratios, (ratio) => {
-			return [a[0] + ratio * c[0], a[1] + ratio * c[1]]
+		return _.map(fractionsAlongPath, (fraction) => {
+			return [a[0] + fraction * c[0], a[1] + fraction * c[1]]
 		});
 	}));
 
