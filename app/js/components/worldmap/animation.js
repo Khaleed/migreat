@@ -28,6 +28,7 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 
 // generate arrows and pass that to a draw function
 let countryId = null;
+
 let render = (fractionThroughTime) => {
 	// loop through countries here
 	let migrantsData;
@@ -132,4 +133,18 @@ document.addEventListener("hoveringCountry", e => {
 
 document.addEventListener("unhoveringCountry", e => {
 	countryId = null;
+});
+// show number of total immigrants when each arrow touches the
+// centroid
+let totalMigrants = () => {
+	// add logic to add the number of migrants
+};
+
+let slider = document.getElementById("slider");
+
+slider.addEventListener("change", e => {
+	let value = e.target.max - e.target.value;
+	let duration = value * 20000;
+	startAnimation(duration, render);
+	// stop animation
 });

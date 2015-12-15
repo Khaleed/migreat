@@ -53,13 +53,20 @@ div.tooltip {
   left: 0;
 }
 
+.rel-pos {
+  position: relative;
+}
+
 #worldmap {
   position: absolute;
   top: 0;
   left: 0;
 }
 
-
+#slider {
+  z-index: 99999;
+  /*position: fixed;*/
+}
 
 
 

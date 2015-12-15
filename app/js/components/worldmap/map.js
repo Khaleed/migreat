@@ -23,13 +23,13 @@ let path = d3.geo.path()
 // geometry object representing all meridians and parallels for this graticule (basically for the grid lines).
 let graticule = d3.geo.graticule();
 // append countries svg element
-let countries = d3.select("body")
+let countries = d3.select('.rel-pos')
 	.append("svg")
 	.attr("id", "worldmap")
 	.attr("width", width)
 	.attr("height", height);
 // tool tip for hovering countries
-let tooltip = d3.select("body")
+let tooltip = d3.select('.rel-pos')
 	.append("div")
 	.attr("class", "tooltip hidden");
 // offset calculations for the tooltip
