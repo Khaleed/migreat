@@ -10,7 +10,7 @@ let screen = document.getElementById('screen');
 let ctx = screen.getContext('2d');
 
 const totalArrowTime = 60;
-const migrantsPerArrow = 40000;
+const migrantsPerArrow = 40000; 
 
 // deal with the destinations stuff
 let destinations = null;
@@ -54,6 +54,7 @@ let render = (fractionThroughTime) => {
 		let points = migrantsPerCountry / migrantsPerArrow;
 		arrows[countryISO] = _.range(points).reduce((list, i) => {
 			let fraction = i / points + fractionThroughTime;
+			console.log("fraction", fraction);
 			if (fraction < 1) {
 				list.push(fraction);
 			}
@@ -61,7 +62,15 @@ let render = (fractionThroughTime) => {
 		}, []);
 		return arrows;
 	}, {});
+
+	let _arrows = Object.keys(arrows).map(iso => {
+		let ret = {};
+		ret[iso] = arrows[iso];
+		return ret;
+	});
+
 	drawArrows(arrows, 840, screen);
+	// updateChart(_arrows);
 };
 
 // let arrows = {
@@ -86,6 +95,7 @@ let clearCanvas = () => {
 
 // {iso: [0.1, 0.5]}
 let drawArrows = (arrows, destination) => {
+	console.log("arrows and dest", arrows, destination);
 	const b = getCentroid(destination);
 	// we need a final object that looks like this:
 	// {iso: ratios} -> [{c, a, ratios}]
@@ -134,11 +144,6 @@ document.addEventListener("hoveringCountry", e => {
 document.addEventListener("unhoveringCountry", e => {
 	countryId = null;
 });
-// show number of total immigrants when each arrow touches the
-// centroid
-let totalMigrants = () => {
-	// add logic to add the number of migrants
-};
 
 let slider = document.getElementById("slider");
 
@@ -147,4 +152,5 @@ slider.addEventListener("change", e => {
 	let duration = value * 20000;
 	startAnimation(duration, render);
 	// stop animation
+
 });
