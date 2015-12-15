@@ -144,18 +144,26 @@ let startAnimation = (duration, callback, ...params) => { // callback -> higher 
 		window.requestAnimationFrames.push(window.requestAnimationFrame(animationStep));
 	}));
 };
+
+// (function (root) {
+
+// })(window);
+
 // create a function -> get a reference of the svg event and listen to it
 document.addEventListener("hoveringCountry", e => {
 	_.map(window.requestAnimationFrames, currentFrame => {
 		window.cancelAnimationFrame(currentFrame);
 		currentFrame = undefined;
-	})
+	});
 	clearCanvas();
 	startAnimation(20 * 1000, render, e.detail);
 });
 
 document.addEventListener("unhoveringCountry", e => {
-	console.log("event", e);
+	_.map(window.requestAnimationFrames, currentFrame => {
+		window.cancelAnimationFrame(currentFrame);
+		currentFrame = undefined;
+	});
+	clearCanvas();
+	startAnimation(20 * 1000, render, null);
 });
-
-
