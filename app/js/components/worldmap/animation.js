@@ -54,7 +54,6 @@ let render = (fractionThroughTime) => {
 		let points = migrantsPerCountry / migrantsPerArrow;
 		arrows[countryISO] = _.range(points).reduce((list, i) => {
 			let fraction = i / points + fractionThroughTime;
-			console.log("fraction", fraction);
 			if (fraction < 1) {
 				list.push(fraction);
 			}
@@ -95,7 +94,6 @@ let clearCanvas = () => {
 
 // {iso: [0.1, 0.5]}
 let drawArrows = (arrows, destination) => {
-	console.log("arrows and dest", arrows, destination);
 	const b = getCentroid(destination);
 	// we need a final object that looks like this:
 	// {iso: ratios} -> [{c, a, ratios}]

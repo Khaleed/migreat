@@ -68,7 +68,9 @@ div.tooltip {
   /*position: fixed;*/
 }
 
- .chart rect {
+.chart {
+  position: relative;
+  z-index: 100;
   fill: steelblue;
 }
 
