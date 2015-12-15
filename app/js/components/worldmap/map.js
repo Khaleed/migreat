@@ -149,3 +149,6 @@ let zoom = d3.behavior.zoom()
 			.attr("d", path.projection(projection));
 	});
 countries.call(zoom);
+export function zoomMap () {
+	alert('foo');
+}

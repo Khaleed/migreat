@@ -1,8 +1,9 @@
 // grab stuff from modules
-import { countriesToCentroids } from './map';
+
 let d3 = require("d3");
 let _ = require('lodash');
-
+import { countriesToCentroids } from './map';
+import updateD3Chart from './../../model/dynamic_chart.js';
 window.requestAnimationFrames = [];
 
 // grab main variables
@@ -67,9 +68,8 @@ let render = (fractionThroughTime) => {
 		ret[iso] = arrows[iso];
 		return ret;
 	});
-
 	drawArrows(arrows, 840, screen);
-	// updateChart(_arrows);
+	updateD3Chart(_arrows);
 };
 
 // let arrows = {
