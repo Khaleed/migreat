@@ -26,28 +26,9 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 	}
 });
 
-// let getArrowsFromRatio = (migrantsPerArrow, destinationISO, ratio) => {
-// 	const b = getCentroid(destinationISO);
-// 		let totalImmigrantsFromACountry = migrantsData[countryISO];
-// 		let a = getCentroid(countryISO);
-// 		let distance = getDistance(a[0], a[1], b[0], b[1]);
-// 		// how to add the speed???????
-// 		// for that you need a list of generated arrows...
-
-
-// 		let numberOfArrows = totalImmigrantsFromACountry / migrantsPerArrow;
-// 		// the time between arrows
-// 		let T = 1 / numberOfArrows;
-// 		let period = migrantsPerArrow / totalImmigrantsFromACountry; // how much time between each arrow launch
-// 		let arrowLifeSpan = ratio - Math.floor(ratio / T) * T;
-
-
-// 		// we need to return a list of arrows with fractionsAlongPath for each
-// 		getDistance();
-// };
-
 // generate arrows and pass that to a draw function
-let render = (fractionThroughTime, countryId) => {
+let countryId = null;
+let render = (fractionThroughTime) => {
 	// loop through countries here
 	let migrantsData;
 	if (countryId) {
@@ -60,8 +41,8 @@ let render = (fractionThroughTime, countryId) => {
 		// migrantsData = {
 		// 	countryId: migrantsData[countryId]
 		// };
-		migrantsData = destinations[840].filter(function(elem) {
-			return elem.iso === countryId.toString();
+		migrantsData = destinations[840].filter(current => {
+			return current.iso === countryId.toString();
 		});
 	}
 
@@ -100,7 +81,7 @@ let bMinusA = (a, b) => {
 
 let clearCanvas = () => {
 	ctx.clearRect(0, 0, screen.width, screen.height);
-}
+};
 
 // {iso: [0.1, 0.5]}
 let drawArrows = (arrows, destination) => {
@@ -117,7 +98,6 @@ let drawArrows = (arrows, destination) => {
 			return [a[0] + fraction * c[0], a[1] + fraction * c[1]]
 		});
 	}));
-
 	clearCanvas();
 	ctx.fillStyle = "brown";
 	// recursive function instead of forEach
@@ -145,25 +125,11 @@ let startAnimation = (duration, callback, ...params) => { // callback -> higher 
 	}));
 };
 
-// (function (root) {
-
-// })(window);
-
 // create a function -> get a reference of the svg event and listen to it
 document.addEventListener("hoveringCountry", e => {
-	_.map(window.requestAnimationFrames, currentFrame => {
-		window.cancelAnimationFrame(currentFrame);
-		currentFrame = undefined;
-	});
-	clearCanvas();
-	startAnimation(20 * 1000, render, e.detail);
+	countryId = e.detail;
 });
 
 document.addEventListener("unhoveringCountry", e => {
-	_.map(window.requestAnimationFrames, currentFrame => {
-		window.cancelAnimationFrame(currentFrame);
-		currentFrame = undefined;
-	});
-	clearCanvas();
-	startAnimation(20 * 1000, render, null);
+	countryId = null;
 });
