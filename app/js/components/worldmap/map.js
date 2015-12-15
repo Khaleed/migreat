@@ -17,7 +17,7 @@ let projection = d3.geo.naturalEarth()
 	.scale(170)
 	.translate([width / 2, height / 2])
 	.precision(0.1) // geometric precision over speed and crisp edgess
-// create new geo path generator
+	// create new geo path generator
 let path = d3.geo.path()
 	.projection(projection);
 // geometry object representing all meridians and parallels for this graticule (basically for the grid lines).
@@ -78,14 +78,20 @@ let countryData = countries.selectAll(".country")
 	.enter()
 	.append("g");
 
-let lastHoveredCountry = null;
+let lastHoveredCountry = 0;
+let svgMap = document.getElementById("worldmap");
 // tooltips
-countryData.on("mousemove", function(d, i) {
-	// create a custome event and dispatch it ->  send only -> d.id
-	lastHoveredCountry = new CustomEvent("hoveringCountry", {detail: d.id, bubbles: true, cancelable: true});
- 	document.getElementById("worldmap").dispatchEvent(lastHoveredCountry);
-
-		let mouse = d3.mouse(countries.node()).map(function(d) {
+countryData.on("mouseover", (d, i) => {
+		// create a custome event and dispatch it ->  send only -> d.id
+		lastHoveredCountry = new CustomEvent("hoveringCountry", {
+			detail: d.id,
+			bubbles: true,
+			cancelable: true
+		});
+		svgMap.dispatchEvent(lastHoveredCountry);
+	})
+	.on("mousemove", function(d, i) {
+		let mouse = d3.mouse(countries.node()).map(d => {
 			return parseInt(d);
 		});
 		tooltip.classed("hidden", false)
@@ -93,7 +99,13 @@ countryData.on("mousemove", function(d, i) {
 			.html(isoCountries.getName(countriesJSON[i].id, "en"))
 	})
 	.on("mouseout", function(d, i) {
-		tooltip.classed("hidden", true)
+		let lastUnHoveredCountry = new CustomEvent("unhoveringCountry", {
+			detail: d.id,
+			bubbles: true,
+			cancelable: true
+		});
+		svgMap.dispatchEvent(lastUnHoveredCountry);
+		tooltip.classed("hidden", true);
 	});
 // append each country and give it a color 
 countryData.append("path", ".graticule")

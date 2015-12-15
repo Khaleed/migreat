@@ -53,19 +53,18 @@ let render = (fractionThroughTime, countryId) => {
 	if (countryId) {
 		migrantsData = [];
 	} else {
-		migrantsData = destinations[840];	
+		migrantsData = destinations[840];
 	}
-	
 	// handle logic for each country
 	if (countryId) {
 		// migrantsData = {
 		// 	countryId: migrantsData[countryId]
 		// };
-		migrantsData = destinations[840].filter(function(elem){
+		migrantsData = destinations[840].filter(function(elem) {
 			return elem.iso === countryId.toString();
 		});
 	}
-	
+
 	let arrows = _.reduce(migrantsData, (arrows, originCountry) => {
 		// we need information about US and origins and fractionThroughTime
 		let migrantsPerCountry = originCountry.value;
@@ -126,7 +125,6 @@ let drawArrows = (arrows, destination) => {
 		ctx.fillRect(c[0], c[1], 1, 1);
 	});
 };
-
 // this will be called for the life cycles
 let startAnimation = (duration, callback, ...params) => { // callback -> higher order function
 	// the callback decouples ticks from time
@@ -146,20 +144,18 @@ let startAnimation = (duration, callback, ...params) => { // callback -> higher 
 		window.requestAnimationFrames.push(window.requestAnimationFrame(animationStep));
 	}));
 };
-
 // create a function -> get a reference of the svg event and listen to it
 document.addEventListener("hoveringCountry", e => {
-	// 
-	_.map(window.requestAnimationFrames, (currentFrame) => {
+	_.map(window.requestAnimationFrames, currentFrame => {
 		window.cancelAnimationFrame(currentFrame);
 		currentFrame = undefined;
 	})
 	clearCanvas();
-	startAnimation(20*1000, render, e.detail);
+	startAnimation(20 * 1000, render, e.detail);
 });
 
-// stop the current animation function 
+document.addEventListener("unhoveringCountry", e => {
+	console.log("event", e);
+});
 
 
-
-// call render passing -> country ID, fractionThroughTime
