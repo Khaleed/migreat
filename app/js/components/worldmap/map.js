@@ -94,7 +94,6 @@ countryData.on("mouseover", (d, i) => {
 		let mouse = d3.mouse(countries.node()).map(d => {
 			return parseInt(d);
 		});
-		console.log("mousemove", d);
 		tooltip.classed("hidden", false)
 			.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
 			.html(isoCountries.getName(countriesJSON[i].id, "en"))

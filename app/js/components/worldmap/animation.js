@@ -10,6 +10,10 @@ const totalArrowTime = 60;
 const migrantsPerArrow = 20000;
 let destinations = null;
 
+let duration = () => {
+	return 60 * 1000;
+};
+
 let loadImmigrationData = d3.csv("us2013.csv", (error, data) => {
 	if (error) {
 		console.error(error);
@@ -17,7 +21,7 @@ let loadImmigrationData = d3.csv("us2013.csv", (error, data) => {
 		destinations = {
 			840: data
 		};
-		startAnimation(60 * 1000, render);
+		startAnimation(render);
 	}
 });
 
@@ -100,15 +104,16 @@ let drawArrows = (arrows, destination) => {
 	});
 };
 // this will be called for the life cycles
-let startAnimation = (duration, callback, ...params) => { // callback -> higher order function
+let startAnimation = (callback, ...params) => { // callback -> higher order function
 	// the callback decouples ticks from time
 	let startTime = null;
 	// called every time animation continues going
 	let animationStep = timestamp => {
 			let currentTime = timestamp;
 			// when to continue animation
-			if (currentTime - startTime <= duration) {
-				let fraction = (currentTime - startTime) / duration;
+			if (currentTime - startTime <= duration()) {
+				let fraction = (currentTime - startTime) / duration();
+				console.log("animationStep: ", duration());
 				callback.apply(null, [fraction].concat(params));
 				window.requestAnimationFrame(animationStep);
 			}
@@ -133,9 +138,11 @@ let slider = document.getElementById("slider");
 // change the slider logic
 slider.addEventListener("change", e => {
 	let value = e.target.max - e.target.value;
-	let duration = value * 20000;
+	console.log("slider: ", value);
+	console.log("slider.value: ", e.target.value);
+	duration = () => { return e.target.value * 60 * 1000 };
 	// updateAnimation
-	startAnimation(duration, render);
+	// startAnimation(duration, render);
 });
 
 // in order to move with the slider
