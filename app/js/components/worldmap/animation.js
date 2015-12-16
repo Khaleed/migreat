@@ -1,21 +1,15 @@
-// grab stuff from modules
-let d3 = require("d3");
-let _ = require('lodash');
 import { countriesToCentroids } from './map';
 import updateD3Chart from './../../model/dynamic_chart.js';
-window.requestAnimationFrames = [];
-
-// grab main variables
+let d3 = require("d3");
+let _ = require('lodash');
 let screen = document.getElementById('screen');
 let ctx = screen.getContext('2d');
-
+window.requestAnimationFrames = [];
 const totalArrowTime = 60;
-const migrantsPerArrow = 40000; 
-
-// deal with the destinations stuff
+const migrantsPerArrow = 40000;
 let destinations = null;
 
-let immigrationData = d3.csv("us2013.csv", (error, data) => {
+let loadImmigrationData = d3.csv("us2013.csv", (error, data) => {
 	if (error) {
 		console.error(error);
 	} else {
@@ -28,9 +22,7 @@ let immigrationData = d3.csv("us2013.csv", (error, data) => {
 
 // generate arrows and pass that to a draw function
 let countryId = null;
-
 let render = (fractionThroughTime) => {
-	// loop through countries here
 	let migrantsData;
 	if (countryId) {
 		migrantsData = [];
@@ -62,22 +54,14 @@ let render = (fractionThroughTime) => {
 		return arrows;
 	}, {});
 
-	let _arrows = Object.keys(arrows).map(iso => {
+	let arrowsForChart = Object.keys(arrows).map(iso => {
 		let ret = {};
 		ret[iso] = arrows[iso];
 		return ret;
 	});
 	drawArrows(arrows, 840, screen);
-	updateD3Chart(_arrows);
+	updateD3Chart(arrowsForChart);
 };
-
-// let arrows = {
-// 		//		192: [fractionThroughTime]
-// 		192: fractionsAlongPath
-
-// 		// 192: [0, 0.1, 0.2, 0.3, 0.4, 0.6, 0.8, 1] // -> this data is mock/dummy -> instead of this I need to use
-// 	};
-
 // takes ISO and returns it's centroid
 let getCentroid = iso => {
 	return countriesToCentroids[iso];

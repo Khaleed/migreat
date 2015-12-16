@@ -75,7 +75,7 @@ div.tooltip {
 #speed-wrapper label{
   position: relative;
   top: -4px;
-  color: red;
+  color: red  ;
 }
 
 #slider {

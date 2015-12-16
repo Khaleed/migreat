@@ -1,10 +1,7 @@
 "use strict";
 let d3 = require('d3');
 let _ = require('lodash');
-import {
-  countriesToCentroids
-}
-from "./../components/worldmap/map.js";
+import { countriesToCentroids } from "./../components/worldmap/map.js";
 
 let svg = d3.select('.chart')
   .select('svg');
@@ -74,6 +71,10 @@ export default function updateD3Chart(data) {
     .attr('height', d => { // change the height for everything that being updated
       let key = Object.keys(d)[0]
       return d[key][0] * totals[key] / 100000;
+    })
+    .attr('y', d => { // change the height for everything that being updated
+      let key = Object.keys(d)[0]
+      return -1 * d[key][0] * totals[key] / 100000;
     })
     .attr('fill', 'blue');
 }
