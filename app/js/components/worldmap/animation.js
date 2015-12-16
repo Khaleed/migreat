@@ -6,7 +6,6 @@ let _ = require('lodash');
 let screen = document.getElementById('screen');
 let ctx = screen.getContext('2d');
 
-const totalArrowTime = 60;
 const migrantsPerArrow = 20000;
 let destinations = null;
 
@@ -81,6 +80,22 @@ let clearCanvas = () => {
 	ctx.clearRect(0, 0, screen.width, screen.height);
 };
 
+let canvasArrow = (x, y) => {
+	ctx.beginPath();
+	ctx.strokeStyle = "red";
+	ctx.fillStyle = "red";
+	// choose random coordinate
+	ctx.moveTo(150, 400);
+	// choose X AND Y is same
+	ctx.lineTo(400, 400);
+	// delta 25
+	ctx.lineTo(375, 375);
+	// create arc
+	ctx.arcTo(400, 400, 375, 425, 35);
+	ctx.lineTo(400, 400);
+	ctx.stroke();
+}
+
 // {iso: [0.1, 0.5]}
 let drawArrows = (arrows, destination) => {
 	const b = getCentroid(destination);
@@ -100,7 +115,8 @@ let drawArrows = (arrows, destination) => {
 	ctx.fillStyle = "brown";
 	// recursive function instead of forEach
 	arrowCoordinates.forEach(c => {
-		ctx.fillRect(c[0], c[1], 1, 1);
+		ctx.fillRect(c[0], c[1], 1, 1); // instead of rects draw arrows
+		// canvasArrow(c[0], c[1]);
 	});
 };
 // this will be called for the life cycles

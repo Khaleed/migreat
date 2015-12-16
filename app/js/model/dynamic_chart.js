@@ -1,4 +1,5 @@
 "use strict";
+
 let d3 = require('d3');
 let _ = require('lodash');
 import { countriesToCentroids } from "./../components/worldmap/map.js";
@@ -38,25 +39,20 @@ let totals = {
   218: 472855
 };
 
-// data looks like this
-// { 124: [0.8, 0.9], 156 : [0.7, 0.8, 0.9] }
-// [ { 124: [0.8, 0.9] }, { 156 : [0.7, 0.8, 0.9] } ]
-// 20 bar graphs 
-
 export default function updateD3Chart(data) {
-  
+  // { 124: [0.8, 0.9], 156 : [0.7, 0.8, 0.9] }
   let bars = svg.selectAll('.bar')
     // solve the problem of binding data to the correct svg element
     .data(data, d => {
-      return Object.keys(d)[0];
+      return Object.keys(d)[0]; // // [ { 124: [0.8, 0.9] }, { 156 : [0.7, 0.8, 0.9] } ]
     });
 
   bars
-    .attr('height', d => { // change the height for everything that being updated
+    .attr('height', d => { 
       let key = Object.keys(d)[0]
       return d[key][0] * totals[key] / 100000;
     })
-    .attr('y', d => { // change the y for everything that being updated
+    .attr('y', d => { 
       let key = Object.keys(d)[0]
       return -1 * d[key][0] * totals[key] / 100000;
     })
@@ -68,11 +64,11 @@ export default function updateD3Chart(data) {
     })
     .append('rect')
     .attr('width', barWidth)
-    .attr('height', d => { // change the height for everything that being updated
+    .attr('height', d => { 
       let key = Object.keys(d)[0]
       return d[key][0] * totals[key] / 100000;
     })
-    .attr('y', d => { // change the y for everything that being updated
+    .attr('y', d => { 
       let key = Object.keys(d)[0]
       return -1 * d[key][0] * totals[key] / 100000;
     })

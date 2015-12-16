@@ -8,7 +8,7 @@ export const MapController = React.createClass({
 	},
 
 	onPause() {
-
+		
 	},
 
 	onForward() {
