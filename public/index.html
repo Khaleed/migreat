@@ -9,11 +9,17 @@
         <link rel="stylesheet" type="text/css" href="/style.css">
     </head>
     <body>
-        <input id="slider" type="range" min="0" max="2" step="0.2"/>
-        <div class="rel-pos">
-            <canvas id="screen" height="800" width="1200" style="border: solid 1px black"></canvas>
+        <div id="speed-wrapper">
+            <label>Speed</label>
+            <input id="slider" type="range" min="0" max="2" step="0.2"/>
         </div>
-        <div class="chart"></div>
+        <div id="controller"></div>
+        <div class="rel-pos">
+            <canvas id="screen" height="800" width="1900"></canvas>
+        </div>
+        <div class="chart">
+            <svg height="800" width="1900"> </svg>
+        </div>
         <script src="/bundle.js"></script>
     </body>
 </html>

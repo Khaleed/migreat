@@ -63,9 +63,23 @@ div.tooltip {
   left: 0;
 }
 
-#slider {
+#speed-wrapper {
+  position: absolute;
+  right: 13px;
+  top: 101px;
+  width: 288px;
   z-index: 99999;
-  /*position: fixed;*/
+  font: 11px BlinkMacSystemFont;
+}
+
+#speed-wrapper label{
+  position: relative;
+  top: -4px;
+  color: red;
+}
+
+#slider {
+  margin-left: 5em;  
 }
 
 .chart {
@@ -78,6 +92,16 @@ div.tooltip {
   fill: white;
   font: 10px sans-serif;
   text-anchor: middle;
+}
+
+#controller {
+  position: absolute;
+  width: 300px;
+  top: 40px;
+  right: 30px;
+  background-color: white;
+  z-index: 1000;
+  border: 1px solid black;
 }
 
 

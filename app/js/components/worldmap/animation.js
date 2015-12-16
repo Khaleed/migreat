@@ -1,5 +1,4 @@
 // grab stuff from modules
-
 let d3 = require("d3");
 let _ = require('lodash');
 import { countriesToCentroids } from './map';

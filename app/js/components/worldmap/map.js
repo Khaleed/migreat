@@ -8,7 +8,7 @@ let worldMap = require("../../../../data/worldmap.json");
 let topojson = require("topojson");
 let isoCountries = require("i18n-iso-countries");
 // define the size of the map
-let width = 1200,
+let width = 1900,
 	height = 800;
 // set color of the map
 let color = d3.scale.category20();
