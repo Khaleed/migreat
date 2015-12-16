@@ -8,9 +8,10 @@ let ctx = screen.getContext('2d');
 
 const migrantsPerArrow = 20000;
 let destinations = null;
+let firstTime = true;
 
 let duration = () => {
-	return 60 * 1000;
+	return 2 * 1000;
 };
 
 let loadImmigrationData = d3.csv("us2013.csv", (error, data) => {
@@ -65,7 +66,31 @@ let render = (fractionThroughTime) => {
 		return ret;
 	});
 	drawArrows(arrows, 840, screen);
-	updateD3Chart(arrowsForChart);
+	let bars = updateD3Chart(arrowsForChart);
+	if (firstTime) {
+		firstTime = false
+		bars.on("mouseover", function (d, i) {
+			console.log("mouseover");
+		// console.log("d + i", d, i)
+	})
+	// .on("mousemove", function(d, i) {
+	// 	let mouse = d3.mouse(countries.node()).map(d => {
+	// 		return parseInt(d);
+	// 	});
+	// 	tooltip.classed("hidden", false)
+	// 		.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+	// 		.html(isoCountries.getName(countriesJSON[i].id, "en"))
+	// })
+	// .on("mouseout", function(d, i) {
+	// 	let lastUnHoveredCountry = new CustomEvent("unhoveringCountry", {
+	// 		detail: d.id,
+	// 		bubbles: true,
+	// 		cancelable: true
+	// 	});
+	// 	svgMap.dispatchEvent(lastUnHoveredCountry);
+	// 	tooltip.classed("hidden", true);
+	// }); 
+	}
 };
 // takes ISO and returns it's centroid
 let getCentroid = iso => {
@@ -80,20 +105,24 @@ let clearCanvas = () => {
 	ctx.clearRect(0, 0, screen.width, screen.height);
 };
 
-let canvasArrow = (x, y) => {
+let canvasArrow = (x, y, degrees) => {
+	ctx.save();
 	ctx.beginPath();
 	ctx.strokeStyle = "red";
 	ctx.fillStyle = "red";
 	// choose random coordinate
-	ctx.moveTo(150, 400);
+	ctx.translate(x, y);
+	ctx.rotate(degrees * Math.PI / 180);
+	ctx.moveTo(0, 0);
 	// choose X AND Y is same
-	ctx.lineTo(400, 400);
+	ctx.lineTo(100, 0); // arrow line
 	// delta 25
-	ctx.lineTo(375, 375);
-	// create arc
-	ctx.arcTo(400, 400, 375, 425, 35);
-	ctx.lineTo(400, 400);
+	ctx.lineTo(80, -25); // bottom edge
+	ctx.lineTo(80, 25);
+	ctx.lineTo(100, 0); // top edge
+	ctx.fill();
 	ctx.stroke();
+	ctx.restore();
 }
 
 // {iso: [0.1, 0.5]}
@@ -113,10 +142,10 @@ let drawArrows = (arrows, destination) => {
 	}));
 	clearCanvas();
 	ctx.fillStyle = "brown";
+	canvasArrow(500, 500);
 	// recursive function instead of forEach
 	arrowCoordinates.forEach(c => {
 		ctx.fillRect(c[0], c[1], 1, 1); // instead of rects draw arrows
-		// canvasArrow(c[0], c[1]);
 	});
 };
 // this will be called for the life cycles
@@ -129,7 +158,6 @@ let startAnimation = (callback, ...params) => { // callback -> higher order func
 			// when to continue animation
 			if (currentTime - startTime <= duration()) {
 				let fraction = (currentTime - startTime) / duration();
-				console.log("animationStep: ", duration());
 				callback.apply(null, [fraction].concat(params));
 				window.requestAnimationFrame(animationStep);
 			}

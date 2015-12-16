@@ -2,12 +2,15 @@
 
 let d3 = require('d3');
 let _ = require('lodash');
-import { countriesToCentroids } from "./../components/worldmap/map.js";
+import {
+  countriesToCentroids
+}
+from "./../components/worldmap/map.js";
 
 let svg = d3.select('.chart')
   .select('svg');
 
-let barWidth = 2;
+let barWidth = 4;
 
 let getCentroid = iso => {
   return countriesToCentroids[iso];
@@ -39,38 +42,54 @@ let totals = {
   218: 472855
 };
 
-export default function updateD3Chart(data) {
+export default function updateD3Chart(data, firstTime) {
   // { 124: [0.8, 0.9], 156 : [0.7, 0.8, 0.9] }
   let bars = svg.selectAll('.bar')
     // solve the problem of binding data to the correct svg element
     .data(data, d => {
+      //console.log(Object.keys(d)[0]);
       return Object.keys(d)[0]; // // [ { 124: [0.8, 0.9] }, { 156 : [0.7, 0.8, 0.9] } ]
     });
 
   bars
-    .attr('height', d => { 
+    .attr('height', d => {
       let key = Object.keys(d)[0]
       return d[key][0] * totals[key] / 100000;
     })
-    .attr('y', d => { 
+    .attr('y', d => {
       let key = Object.keys(d)[0]
       return -1 * d[key][0] * totals[key] / 100000;
     })
 
   bars.enter()
     .append('g')
+    .attr('class', 'bar')
     .attr('transform', (d, i) => {
-      return "translate(" + (barWidth * i + usa_x) + "," + usa_y + ")";
+      return "translate(" + (barWidth * i + usa_x - 40) + "," + usa_y + 30 + ")";
     })
     .append('rect')
     .attr('width', barWidth)
-    .attr('height', d => { 
+    .attr('height', d => {
       let key = Object.keys(d)[0]
       return d[key][0] * totals[key] / 100000;
     })
-    .attr('y', d => { 
+    .attr('y', d => {
       let key = Object.keys(d)[0]
       return -1 * d[key][0] * totals[key] / 100000;
     })
-    .attr('fill', 'blue');
+    .attr('fill', 'blue')
+    return bars;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

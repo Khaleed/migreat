@@ -64,7 +64,7 @@ div.tooltip {
 }
 
 #speed-wrapper {
-  position: absolute;
+  position: fixed;
   right: 13px;
   top: 101px;
   width: 288px;
@@ -96,7 +96,7 @@ div.tooltip {
 }
 
 #controller {
-  position: absolute;
+  position: fixed;
   width: 300px;
   top: 40px;
   right: 30px;
