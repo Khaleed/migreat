@@ -51,7 +51,7 @@ export default function updateD3Chart(data, firstTime) {
       return Object.keys(d)[0]; // // [ { 124: [0.8, 0.9] }, { 156 : [0.7, 0.8, 0.9] } ]
     });
 
-  bars
+  bars.select('rect')
     .attr('height', d => {
       let key = Object.keys(d)[0]
       return d[key][0] * totals[key] / 100000;
@@ -78,18 +78,11 @@ export default function updateD3Chart(data, firstTime) {
       return -1 * d[key][0] * totals[key] / 100000;
     })
     .attr('fill', 'blue')
-    return bars;
+  
+    bars.on("mouseover", function(d, i) {
+      console.log("mouseover");
+      let iso = Object.keys(d)[0];
+      // highlightCountry(iso);
+
+    })
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
