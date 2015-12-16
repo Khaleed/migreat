@@ -20,12 +20,27 @@ export const MapController = React.createClass({
 	},
 
 	render() {
+		let styles = {
+			wrapper: {
+				width: "90%",
+				margin: "0 auto",
+				marginLeft: "1em",
+                marginRight: "1em",
+    			marginTop: "1em",
+    			marginBottom: "4em"	
+			},
+			button: {
+				color: "red",
+				width: "25%",
+				height: "100px"
+			}
+		};
 		return (
-			<div>
-				<input type="button" onClick={this.onPlay} >Play</input>
-				<input type="button" onClick={this.onPause} >Pause</input>
-				<input type="button" onClick={this.onForward} >Forward</input>
-				<input type="button" onClick={this.onRewind} >Rewind</input>
+			<div style={styles.wrapper}>
+				<input style={styles.button} value="Play" type="button" onClick={this.onPlay} ></input>
+				<input style={styles.button} value="Pause" type="button" onClick={this.onPause} ></input>
+				<input style={styles.button} value="Forward" type="button" onClick={this.onForward} ></input>
+				<input style={styles.button} value="Rewind" type="button" onClick={this.onRewind} ></input>
 			</div>);
 		;
 	}
