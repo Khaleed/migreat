@@ -1,12 +1,13 @@
 import { countriesToCentroids } from './map';
 import updateD3Chart from './../../model/dynamic_chart.js';
+
 let d3 = require("d3");
 let _ = require('lodash');
 let screen = document.getElementById('screen');
 let ctx = screen.getContext('2d');
-window.requestAnimationFrames = [];
+
 const totalArrowTime = 60;
-const migrantsPerArrow = 40000;
+const migrantsPerArrow = 20000;
 let destinations = null;
 
 let loadImmigrationData = d3.csv("us2013.csv", (error, data) => {
@@ -16,12 +17,13 @@ let loadImmigrationData = d3.csv("us2013.csv", (error, data) => {
 		destinations = {
 			840: data
 		};
-		startAnimation(20 * 1000, render);
+		startAnimation(60 * 1000, render);
 	}
 });
 
 // generate arrows and pass that to a draw function
 let countryId = null;
+
 let render = (fractionThroughTime) => {
 	let migrantsData;
 	if (countryId) {
@@ -103,18 +105,18 @@ let startAnimation = (duration, callback, ...params) => { // callback -> higher 
 	let startTime = null;
 	// called every time animation continues going
 	let animationStep = timestamp => {
-		let currentTime = timestamp;
-		// when to continue animation
-		if (currentTime - startTime <= duration) {
-			let fraction = (currentTime - startTime) / duration;
-			callback.apply(null, [fraction].concat(params));
-			window.requestAnimationFrames.push(window.requestAnimationFrame(animationStep));
+			let currentTime = timestamp;
+			// when to continue animation
+			if (currentTime - startTime <= duration) {
+				let fraction = (currentTime - startTime) / duration;
+				callback.apply(null, [fraction].concat(params));
+				window.requestAnimationFrame(animationStep);
+			}
 		}
-	}
-	window.requestAnimationFrames.push(window.requestAnimationFrame(timestamp => {
-		startTime = timestamp;
-		window.requestAnimationFrames.push(window.requestAnimationFrame(animationStep));
-	}));
+		window.requestAnimationFrame(timestamp => {
+			startTime = timestamp;
+			window.requestAnimationFrame(animationStep);
+		});
 };
 
 // create a function -> get a reference of the svg event and listen to it
@@ -128,10 +130,14 @@ document.addEventListener("unhoveringCountry", e => {
 
 let slider = document.getElementById("slider");
 
+// change the slider logic
 slider.addEventListener("change", e => {
 	let value = e.target.max - e.target.value;
 	let duration = value * 20000;
+	// updateAnimation
 	startAnimation(duration, render);
-	// stop animation
-
 });
+
+// in order to move with the slider
+
+// you need

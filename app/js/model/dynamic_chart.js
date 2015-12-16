@@ -56,7 +56,7 @@ export default function updateD3Chart(data) {
       let key = Object.keys(d)[0]
       return d[key][0] * totals[key] / 100000;
     })
-    .attr('y', d => { // change the height for everything that being updated
+    .attr('y', d => { // change the y for everything that being updated
       let key = Object.keys(d)[0]
       return -1 * d[key][0] * totals[key] / 100000;
     })
@@ -72,7 +72,7 @@ export default function updateD3Chart(data) {
       let key = Object.keys(d)[0]
       return d[key][0] * totals[key] / 100000;
     })
-    .attr('y', d => { // change the height for everything that being updated
+    .attr('y', d => { // change the y for everything that being updated
       let key = Object.keys(d)[0]
       return -1 * d[key][0] * totals[key] / 100000;
     })

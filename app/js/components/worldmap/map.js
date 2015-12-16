@@ -14,7 +14,7 @@ let width = 1900,
 let color = d3.scale.category20();
 //set up the view of the map
 let projection = d3.geo.naturalEarth()
-	.scale(170)
+	.scale(200)
 	.translate([width / 2, height / 2])
 	.precision(0.1) // geometric precision over speed and crisp edgess
 	// create new geo path generator
@@ -94,6 +94,7 @@ countryData.on("mouseover", (d, i) => {
 		let mouse = d3.mouse(countries.node()).map(d => {
 			return parseInt(d);
 		});
+		console.log("mousemove", d);
 		tooltip.classed("hidden", false)
 			.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
 			.html(isoCountries.getName(countriesJSON[i].id, "en"))
