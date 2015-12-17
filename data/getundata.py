@@ -8,7 +8,7 @@ def transform_data(in_file, out_file):
 	dest = 'United States of America'
 
 	with open(in_file, 'r') as f:
-		# read csv
+		
 		data = pd.read_csv(f)
 
 	row = data.loc[data['Destination'] == dest]
