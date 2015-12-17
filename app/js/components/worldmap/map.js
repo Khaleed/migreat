@@ -27,14 +27,14 @@ let path = d3.geo.path()
 let graticule = d3.geo.graticule();
 
 // append countries svg element
-let countries = d3.select('.rel-pos')
+export const countries = d3.select('.rel-pos')
 	.append("svg")
 	.attr("id", "worldmap")
 	.attr("width", width)
 	.attr("height", height);
 
 // tool tip for hovering countries
-let tooltip = d3.select('.rel-pos')
+export const tooltip = d3.select('.rel-pos')
 	.append("div")
 	.attr("class", "tooltip hidden");
 
@@ -100,6 +100,7 @@ countryData.on("mouseover", (d, i) => {
 		let mouse = d3.mouse(countries.node()).map(d => {
 			return parseInt(d);
 		});
+		console.log(tooltip, (mouse[0] + offsetL), (mouse[1] + offsetT));
 		tooltip.classed("hidden", false)
 			.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
 			.html(isoCountries.getName(countriesJSON[i].id, "en"))

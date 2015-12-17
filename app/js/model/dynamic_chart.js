@@ -2,10 +2,9 @@
 
 let d3 = require('d3');
 let _ = require('lodash');
-import {
-  countriesToCentroids
-}
-from "./../components/worldmap/map.js";
+import { countriesToCentroids } from "./../components/worldmap/map";
+import { tooltip, countries } from "./../components/worldmap/map";
+let isoCountries = require("i18n-iso-countries");
 
 // let svg = d3.select('.chart')
 //   .select('svg');
@@ -20,6 +19,10 @@ let getCentroid = iso => {
 
 let usa_x = getCentroid(840)[0];
 let usa_y = getCentroid(840)[1];
+
+// offset calculations for the tooltip
+let offsetL = document.body.offsetLeft + 40;
+let offsetT = document.body.offsetTop + 20;
 
 let totals = {
   484: 12950828,
@@ -84,12 +87,13 @@ export default function updateD3Chart(data, firstTime) {
     .attr('fill', 'blue');
 
   bars.on("mouseover", function(d, i) {
-    let mouse = d3.mouse(bars.node()).map(d => {
+    let mouse = d3.mouse(countries.node()).map(d => {
       return parseInt(d);
     });
+    console.log("hovering", (mouse[0] + offsetL), (mouse[1] + offsetT), isoCountries.getName(Object.keys(d)[0], "en"), tooltip);
     tooltip.classed("hidden", false)
       .attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
-      .html(isoCountries.getName(countriesJSON[i].id, "en"))
+      .html(isoCountries.getName(Object.keys(d)[0], "en"))
   })
 
   bars.on("mouseout", function(d, i) {

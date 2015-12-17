@@ -116,7 +116,6 @@ let drawArrows = (arrows, destination) => {
 		// going through all the arrows of a country
 		let a = getCentroid(iso);
 		let c = bMinusA(a, b);
-		console.log("angles", Math.atan(c[1] / c[0]));
 		fractionsAlongPath.forEach(fraction => {
 			let destinationPath = [a[0] + fraction * c[0], a[1] + fraction * c[1]];
 			canvasArrow(destinationPath[0], destinationPath[1], Math.atan(c[1] / c[0]));
@@ -163,7 +162,3 @@ slider.addEventListener("change", e => {
 	// updateAnimation
 	// startAnimation(duration, render);
 });
-
-// in order to move with the slider
-
-// you need
