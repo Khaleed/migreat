@@ -5,37 +5,44 @@ require("d3-geo-projection/d3.geo.projection");
 let worldMap = require("../../../../data/worldmap.json");
 let topojson = require("topojson");
 let isoCountries = require("i18n-iso-countries");
+
 // size of the map
 let width = 1900,
 	height = 800;
+
 // color of the map
 let color = d3.scale.category20();
+
 // the view of the map
 let projection = d3.geo.naturalEarth()
 	.scale(200)
 	.translate([width / 2, height / 2])
-	.precision(0.5) 
+	.precision(0.5); 
+
 // create new geo path generator
 let path = d3.geo.path()
 	.projection(projection);
+
 // geometty object to represent the grid lines
 let graticule = d3.geo.graticule();
+
 // append countries svg element
 let countries = d3.select('.rel-pos')
 	.append("svg")
 	.attr("id", "worldmap")
 	.attr("width", width)
 	.attr("height", height);
+
 // tool tip for hovering countries
 let tooltip = d3.select('.rel-pos')
 	.append("div")
 	.attr("class", "tooltip hidden");
+
 // offset calculations for the tooltip
 let offsetL = document.body.offsetLeft + 40;
 let offsetT = document.body.offsetTop + 20;
 
-// create and append new elements
-// SVG allows graphical objects to be defined for later reuse
+// create and append new svgs to be used later
 countries.append("defs")
 	.append("path")
 	.datum({
@@ -44,14 +51,14 @@ countries.append("defs")
 	.attr("id", "sphere")
 	.attr("id", path);
 
-// The use element takes nodes from within the SVG document, and duplicates them somewhere else. 
+// The use element takes nodes from SVG document and duplicates them 
 countries.append("use")
 	.attr("class", "stroke")
 	.attr("xlink:href", "#sphere");
 
 countries.append("use")
 	.attr("class", "fill")
-	.attr("xlink:href", "#sphere"); // refer to href attr to the xlink namespace
+	.attr("xlink:href", "#sphere"); 
 
 // display multiple features -> polygons and multi-polygons
 countries.append("path")
@@ -64,13 +71,13 @@ let countriesJSON = topojson.feature(worldMap, worldMap.objects.countries).featu
 
 // {1: [300, 250], 2: [100, 200], 5: [120, 100]}
 export const countriesToCentroids = countriesJSON.reduce((obj, d) => {
-	// console.log("object to reduce", obj);
 	let centroid = path.centroid(d);
 	obj[d.id] = centroid;
 	return obj;
 }, {});
 
 let neighbors = topojson.neighbors(worldMap.objects.countries.geometries);
+
 // bind country data to svg group element 
 let countryData = countries.selectAll(".country")
 	.data(countriesJSON)
@@ -79,7 +86,8 @@ let countryData = countries.selectAll(".country")
 
 let lastHoveredCountry = 0;
 let svgMap = document.getElementById("worldmap");
-// tooltip
+
+// tooltip event listener
 countryData.on("mouseover", (d, i) => {
 		lastHoveredCountry = new CustomEvent("hoveringCountry", {
 			detail: d.id,
@@ -105,6 +113,7 @@ countryData.on("mouseover", (d, i) => {
 		svgMap.dispatchEvent(lastUnHoveredCountry);
 		tooltip.classed("hidden", true);
 	});
+
 // append each country and give it a color 
 countryData.append("path", ".graticule")
 	.attr("d", path)

@@ -1,7 +1,4 @@
-import {
-	countriesToCentroids
-}
-from './map';
+import { countriesToCentroids } from './map';                                                   
 import updateD3Chart from './../../model/dynamic_chart.js';
 
 let d3 = require("d3");
@@ -89,8 +86,8 @@ let canvasArrow = (x, y, angles) => {
 	ctx.save();
 	ctx.beginPath();
 	ctx.lineWidth = 20;
-	ctx.strokeStyle = "red";
-	ctx.fillStyle = "red";
+	ctx.strokeStyle = "rgba(255, 0, 0, 0.2)";
+	ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
 	// choose random coordinate
 	ctx.translate(x, y);
 	ctx.scale(0.05, 0.05)
@@ -105,7 +102,7 @@ let canvasArrow = (x, y, angles) => {
 	ctx.fill();
 	ctx.stroke();
 	ctx.restore();
-}
+};
 
 // {iso: [0.1, 0.5]}
 let drawArrows = (arrows, destination) => {

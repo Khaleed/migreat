@@ -7,8 +7,10 @@ import {
 }
 from "./../components/worldmap/map.js";
 
-let svg = d3.select('.chart')
-  .select('svg');
+// let svg = d3.select('.chart')
+//   .select('svg');
+
+let svg = d3.select('#worldmap');
 
 let barWidth = 4;
 
@@ -45,9 +47,7 @@ let totals = {
 export default function updateD3Chart(data, firstTime) {
   // { 124: [0.8, 0.9], 156 : [0.7, 0.8, 0.9] }
   let bars = svg.selectAll('.bar')
-    // solve the problem of binding data to the correct svg element
     .data(data, d => {
-      //console.log(Object.keys(d)[0]);
       return Object.keys(d)[0]; // // [ { 124: [0.8, 0.9] }, { 156 : [0.7, 0.8, 0.9] } ]
     });
 
@@ -64,6 +64,10 @@ export default function updateD3Chart(data, firstTime) {
   bars.enter()
     .append('g')
     .attr('class', 'bar')
+    .attr('id', d => {
+      let key = Object.keys(d)[0]
+      return totals[key];
+    })
     .attr('transform', (d, i) => {
       return "translate(" + (barWidth * i + usa_x - 40) + "," + usa_y + 30 + ")";
     })
@@ -77,12 +81,18 @@ export default function updateD3Chart(data, firstTime) {
       let key = Object.keys(d)[0]
       return -1 * d[key][0] * totals[key] / 100000;
     })
-    .attr('fill', 'blue')
-  
-    bars.on("mouseover", function(d, i) {
-      console.log("mouseover");
-      let iso = Object.keys(d)[0];
-      // highlightCountry(iso);
+    .attr('fill', 'blue');
 
-    })
+  bars.on("mouseover", function(d, i) {
+    let mouse = d3.mouse(bars.node()).map(d => {
+      return parseInt(d);
+    });
+    tooltip.classed("hidden", false)
+      .attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+      .html(isoCountries.getName(countriesJSON[i].id, "en"))
+  })
+
+  bars.on("mouseout", function(d, i) {
+    tooltip.classed("hidden", true);
+  });
 }

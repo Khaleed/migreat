@@ -86,7 +86,7 @@ div.tooltip {
   position: relative;
   z-index: 100;
   fill: steelblue;
-  pointer-events: none;
+  /*pointer-events: none;*/
 }
 
 .chart text {
