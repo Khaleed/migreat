@@ -2,6 +2,10 @@ body {
   background: #fcfcfa;
 }
 
+* {
+  font-family: 'Open Sans', sans-serif;
+}
+
 .stroke {
   fill: none;
   stroke: #000;
@@ -75,7 +79,7 @@ div.tooltip {
 #speed-wrapper label{
   position: relative;
   top: -4px;
-  color: red  ;
+  color: green;
 }
 
 #slider {
@@ -104,15 +108,4 @@ div.tooltip {
   z-index: 1000;
   border: 1px solid black;
 }
-
-
-
-
-
-
-
-
-
-
-
 

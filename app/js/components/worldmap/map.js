@@ -33,7 +33,7 @@ export const countries = d3.select('.rel-pos')
 	.attr("width", width)
 	.attr("height", height);
 
-// tool tip for hovering countries
+// tooltip for hovering countries
 export const tooltip = d3.select('.rel-pos')
 	.append("div")
 	.attr("class", "tooltip hidden");
@@ -51,7 +51,7 @@ countries.append("defs")
 	.attr("id", "sphere")
 	.attr("id", path);
 
-// The use element takes nodes from SVG document and duplicates them 
+// use element takes nodes from SVG document and duplicates them 
 countries.append("use")
 	.attr("class", "stroke")
 	.attr("xlink:href", "#sphere");
@@ -86,7 +86,6 @@ let countryData = countries.selectAll(".country")
 
 let lastHoveredCountry = 0;
 let svgMap = document.getElementById("worldmap");
-
 // tooltip event listener
 countryData.on("mouseover", (d, i) => {
 		lastHoveredCountry = new CustomEvent("hoveringCountry", {
@@ -100,7 +99,6 @@ countryData.on("mouseover", (d, i) => {
 		let mouse = d3.mouse(countries.node()).map(d => {
 			return parseInt(d);
 		});
-		console.log(tooltip, (mouse[0] + offsetL), (mouse[1] + offsetT));
 		tooltip.classed("hidden", false)
 			.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
 			.html(isoCountries.getName(countriesJSON[i].id, "en"))

@@ -30,7 +30,7 @@ export const MapController = React.createClass({
     			marginBottom: "4em"	
 			},
 			button: {
-				color: "red",
+				color: "green",
 				width: "25%",
 				height: "100px"
 			}

@@ -6,9 +6,6 @@ import { countriesToCentroids } from "./../components/worldmap/map";
 import { tooltip, countries } from "./../components/worldmap/map";
 let isoCountries = require("i18n-iso-countries");
 
-// let svg = d3.select('.chart')
-//   .select('svg');
-
 let svg = d3.select('#worldmap');
 
 let barWidth = 4;
@@ -47,13 +44,12 @@ let totals = {
   218: 472855
 };
 
-export default function updateD3Chart(data, firstTime) {
+export default function updateD3Chart(data) {
   // { 124: [0.8, 0.9], 156 : [0.7, 0.8, 0.9] }
   let bars = svg.selectAll('.bar')
     .data(data, d => {
       return Object.keys(d)[0]; // // [ { 124: [0.8, 0.9] }, { 156 : [0.7, 0.8, 0.9] } ]
     });
-
   bars.select('rect')
     .attr('height', d => {
       let key = Object.keys(d)[0]
@@ -63,7 +59,6 @@ export default function updateD3Chart(data, firstTime) {
       let key = Object.keys(d)[0]
       return -1 * d[key][0] * totals[key] / 100000;
     })
-
   bars.enter()
     .append('g')
     .attr('class', 'bar')
@@ -95,7 +90,6 @@ export default function updateD3Chart(data, firstTime) {
       .attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
       .html(isoCountries.getName(Object.keys(d)[0], "en"))
   })
-
   bars.on("mouseout", function(d, i) {
     tooltip.classed("hidden", true);
   });

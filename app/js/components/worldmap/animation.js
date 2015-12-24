@@ -5,13 +5,13 @@ let d3 = require("d3");
 let _ = require('lodash');
 let screen = document.getElementById('screen');
 let ctx = screen.getContext('2d');
+let slider = document.getElementById("slider");
 
 const migrantsPerArrow = 20000;
 let destinations = null;
-let firstTime = true;
 
 let duration = () => {
-	return 5 * 1000;
+	return 60 * 1000;
 };
 
 let loadImmigrationData = d3.csv("us2013.csv", (error, data) => {
@@ -25,9 +25,8 @@ let loadImmigrationData = d3.csv("us2013.csv", (error, data) => {
 	}
 });
 
-// generate arrows and pass that to a draw function
 let countryId = null;
-
+// how the arrow looks at that point
 let render = (fractionThroughTime) => {
 	let migrantsData;
 	if (countryId) {
@@ -35,16 +34,16 @@ let render = (fractionThroughTime) => {
 	} else {
 		migrantsData = destinations[840];
 	}
-	// handle logic for each country
 	if (countryId) {
-		// migrantsData = {
-		// 	countryId: migrantsData[countryId]
-		// };
 		migrantsData = destinations[840].filter(current => {
 			return current.iso === countryId.toString();
 		});
 	}
-
+	// arrows for each country 
+	/* migrantsData = {
+		countryId: migrantsData[countryId]
+	};
+	*/
 	let arrows = _.reduce(migrantsData, (arrows, originCountry) => {
 		// we need information about US and origins and fractionThroughTime
 		let migrantsPerCountry = originCountry.value;
@@ -66,14 +65,17 @@ let render = (fractionThroughTime) => {
 		return ret;
 	});
 	drawArrows(arrows, 840, screen);
-	let bars = updateD3Chart(arrowsForChart);
-
+	updateD3Chart(arrowsForChart);
 };
-// takes ISO and returns it's centroid
+
 let getCentroid = iso => {
 	return countriesToCentroids[iso];
 };
-// distance between a and b
+
+// unit vector of point c (the direction to get from b to a) 
+//-> which is calculated from taking the vector of b
+// and substracting from vector of a
+// to get the distance between origin country and destination 
 let bMinusA = (a, b) => {
 	return [b[0] - a[0], b[1] - a[1]];
 };
@@ -110,7 +112,6 @@ let drawArrows = (arrows, destination) => {
 	// we need a final object that looks like this:
 	// {iso: ratios} -> [{c, a, ratios}]
 	clearCanvas();
-	ctx.fillStyle = "brown";
 	// going through all the countries
 	_.forEach(arrows, (fractionsAlongPath, iso) => {
 		// going through all the arrows of a country
@@ -122,11 +123,11 @@ let drawArrows = (arrows, destination) => {
 		});
 	});
 };
-// this will be called for the life cycles
-let startAnimation = (callback, ...params) => { // callback -> higher order function
+
+let startAnimation = (callback, ...params) => { 
 	// the callback decouples ticks from time
 	let startTime = null;
-	// called every time animation continues going
+	// animation continues going
 	let animationStep = timestamp => {
 		let currentTime = timestamp;
 		// when to continue animation
@@ -142,7 +143,7 @@ let startAnimation = (callback, ...params) => { // callback -> higher order func
 	});
 };
 
-// create a function -> get a reference of the svg event and listen to it
+// get a reference of the svg event and listen to it
 document.addEventListener("hoveringCountry", e => {
 	countryId = e.detail;
 });
@@ -151,14 +152,7 @@ document.addEventListener("unhoveringCountry", e => {
 	countryId = null;
 });
 
-let slider = document.getElementById("slider");
-
-// change the slider logic
 slider.addEventListener("change", e => {
 	let value = e.target.max - e.target.value;
-	// console.log("slider: ", value);
-	// console.log("slider.value: ", e.target.value);
-	// duration = () => { return e.target.value * 60 * 1000 };
-	// updateAnimation
-	// startAnimation(duration, render);
+	startAnimation(duration, render);
 });
