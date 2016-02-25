@@ -1,1 +1,3 @@
 This is an experiment to visualise global immmigration data from the UN using d3. The data is consumed using a Python script with pandas and numpy data analysis libraries. The map of the world is drawn using d3 and topoJSON data. The centre of each country is identified on the map using d3 centroid function. Migration flow animation using HTML5 canvas complete the data visualisation. 
+
+<a href='http://www.recurse.com' title='Made with love at the Recurse Center'><img src='https://cloud.githubusercontent.com/assets/2883345/11322972/9e553260-910b-11e5-8de9-a5bf00c352ef.png' height='59px'/></a>
