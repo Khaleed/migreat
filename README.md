@@ -1,4 +1,4 @@
-![alt tag](https://zulip-user-uploads.s3.amazonaws.com/13/VSS9BIvqG9-aiFIZZn_v60_0/screen-shot-2016-03-19-at-192619.png?Signature=X0OAXKmKpXEcAKoxrhLu7MyxIFU%3D&Expires=1458416810&AWSAccessKeyId=AKIAJQ7CKZ6IDLBNE2HA)
+![Alt text](/Documents/migreat.png?raw=true "Immigration Data Visualisation")
 
 ## Motivation
 
