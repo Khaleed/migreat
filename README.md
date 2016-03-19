@@ -1,3 +1,5 @@
+<a href='http://www.recurse.com' title='Made with love at the Recurse Center'><img src='https://https://zulip-user-uploads.s3.amazonaws.com/13/VSS9BIvqG9-aiFIZZn_v60_0/screen-shot-2016-03-19-at-192619.png?Signature=F9mfZ%2BC9DqgoAXK27F2pn9c09IY%3D&Expires=1458416231&AWSAccessKeyId=AKIAJQ7CKZ6IDLBNE2HA'/></a>
+
 ## Motivation
 
 Immigration has been an important phenomena over the past few centuries and has recently come to the forefront with the recent refugee crisis in Europe. This is an experiment to visualise the most recent global immmigration wave from 1990 to 2013 using d3 and react.
