@@ -1,5 +1,7 @@
 # Migreat
 
+![Snapshot of Migreat](./public/migreat.png)
+
 ## Motivation
 
 Immigration has been an important phenomena over the past few centuries and has recently come to the forefront with the recent refugee crisis in Europe. This is an experiment to visualise the most recent global immmigration wave from 1990 to 2013 using [d3](https://d3js.org/) and [react](https://facebook.github.io/react/).
