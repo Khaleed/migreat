@@ -1,6 +1,6 @@
 # Migreat
 
-![Snapshot of Migreat](./public/migreat.png)
+![Snapshot of Migreat](/public/migreat.png")
 
 ## Motivation
 
