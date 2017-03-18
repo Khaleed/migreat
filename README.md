@@ -1,6 +1,6 @@
 # Migreat
 
-![Snapshot of Migreat](/public/migreat.png")
+![Snapshot of Migreat](https://github.com/Khaleed/migreat/blob/master/public/migreat.png)
 
 ## Motivation
 
