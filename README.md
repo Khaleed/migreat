@@ -42,7 +42,7 @@ To build when NODE_ENV environmental variable is set to production
 
  - Jesse Tasse Gonzalez
  - Giorgio Leveroni
- - Andrew Deshernais
+ - Andrew Desharnais
  - Darius Bacon
  
 ## License
