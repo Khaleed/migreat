@@ -3,6 +3,8 @@ var path = require('path');
 
 module.exports = {
 
+    devtool: 'source-map',
+
     entry: ['babel-polyfill', './app/js/app.jsx'],
 
     output: {
@@ -50,17 +52,18 @@ module.exports = {
         new webpack.optimize.DedupePlugin(),
         // Optimise occurence order
         new webpack.optimize.OccurenceOrderPlugin(),
-        // only for production
+        // Only for production
         new webpack.DefinePlugin({
             'process.env': {
                 'NODE_ENV': JSON.stringify('production')
             }
         }),
-        // minimise output chunks of scripts/css
+        // Minimise output chunks of scripts/css
         new webpack.optimize.UglifyJsPlugin({
             compressor: {
                 warnings: false
             }
         })
     ]
+
 };
