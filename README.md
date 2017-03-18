@@ -12,7 +12,7 @@ Immigration has been an important phenomena over the past few centuries and has 
 - Migration flow animation using HTML5 canvas complete the data visualisation. 
 - The code is written following some functional programming principles using the [lodash](https://lodash.com/) utility library. 
 - The first part of this project is to visualise U.S. immigration data for the top 20 country of origins. 
-- The project is a work in progress.
+- The project is a work in progress and the data is not shared.
 
 ## Installation
 
@@ -34,7 +34,7 @@ To serve at http://localhost:8080/webpack-dev-server/
 
 ### Build
 
-To build when NODE_ENV environmental variable is set to production
+To build when NODE_ENV environmental variable is set to production.
 
 `npm run deploy`
 
