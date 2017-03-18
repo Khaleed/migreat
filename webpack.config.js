@@ -30,7 +30,7 @@ module.exports = {
                 loader: 'babel-loader',
                 query: {
                     plugins: ['transform-runtime'],
-                    presets: ['es2015', 'stage-0', 'react'],
+                    presets: ['es2015', 'stage-0', 'react']
                 }
             },
 
@@ -50,4 +50,4 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.json', '.jsx', '']
     }
-}
+};
