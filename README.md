@@ -14,4 +14,39 @@ Immigration has been an important phenomena over the past few centuries and has 
 - The first part of this project is to visualise U.S. immigration data for the top 20 country of origins. 
 - The project is a work in progress.
 
-<a href='http://www.recurse.com' title='Made with love at the Recurse Center'><img src='https://cloud.githubusercontent.com/assets/2883345/11322972/9e553260-910b-11e5-8de9-a5bf00c352ef.png' height='59px'/></a>
+## Installation
+
+### Dependencies
+
+To get dependencies
+
+`npm install`
+
+Install [Webpack](https://webpack.js.org/) globally 
+
+`npm install webpack-devserver webpack -g`
+
+### Server
+
+To serve at http://localhost:8080/webpack-dev-server/
+
+`npm run watch`
+
+### Build
+
+To build when NODE_ENV environmental variable is set to production
+
+`npm run deploy`
+
+## Contributors
+
+ - Jesse Tasse Gonzalez
+ - Giorgio Leveroni
+ - Andrew Deshernais
+ - Darius Bacon
+ 
+## License
+
+Migreat is released under the The [MIT](https://opensource.org/licenses/MIT) License.
+
+<a href='http://www.recurse.com' title='Made with love at the Recurse Center'><img src='https://cloud.githubusercontent.com/assets/2883345/11325206/336ea5f4-9150-11e5-9e90-d86ad31993d8.png' height='20px'/></a>
