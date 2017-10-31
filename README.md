@@ -49,6 +49,6 @@ To build when NODE_ENV environmental variable is set to production.
  
 ## License
 
-Migreat is released under the The [MIT](https://opensource.org/licenses/MIT) License.
+Migreat is released under the The [GPL 3.0](https://opensource.org/licenses/lgpl-3.0.html) License.
 
 <a href='http://www.recurse.com' title='Made with love at the Recurse Center'><img src='https://cloud.githubusercontent.com/assets/2883345/11325206/336ea5f4-9150-11e5-9e90-d86ad31993d8.png' height='20px'/></a>
