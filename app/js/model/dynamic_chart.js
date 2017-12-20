@@ -1,12 +1,12 @@
 "use strict";
 
-let d3 = require('d3');
-let _ = require('lodash');
+let d3 = require("d3");
+let _ = require("lodash");
 import { countriesToCentroids } from "./../components/worldmap/map";
 import { tooltip, countries } from "./../components/worldmap/map";
 let isoCountries = require("i18n-iso-countries");
 
-let svg = d3.select('#worldmap');
+let svg = d3.select("#worldmap");
 
 let barWidth = 4;
 
@@ -46,50 +46,63 @@ let totals = {
 
 export default function updateD3Chart(data) {
   // { 124: [0.8, 0.9], 156 : [0.7, 0.8, 0.9] }
-  let bars = svg.selectAll('.bar')
-    .data(data, d => {
-      return Object.keys(d)[0]; // // [ { 124: [0.8, 0.9] }, { 156 : [0.7, 0.8, 0.9] } ]
-    });
-  bars.select('rect')
-    .attr('height', d => {
-      let key = Object.keys(d)[0]
+  let bars = svg.selectAll(".bar").data(data, d => {
+    return Object.keys(d)[0]; // // [ { 124: [0.8, 0.9] }, { 156 : [0.7, 0.8, 0.9] } ]
+  });
+  bars
+    .select("rect")
+    .attr("height", d => {
+      let key = Object.keys(d)[0];
       return d[key][0] * totals[key] / 100000;
     })
-    .attr('y', d => {
-      let key = Object.keys(d)[0]
+    .attr("y", d => {
+      let key = Object.keys(d)[0];
       return -1 * d[key][0] * totals[key] / 100000;
-    })
-  bars.enter()
-    .append('g')
-    .attr('class', 'bar')
-    .attr('id', d => {
-      let key = Object.keys(d)[0]
+    });
+  bars
+    .enter()
+    .append("g")
+    .attr("class", "bar")
+    .attr("id", d => {
+      let key = Object.keys(d)[0];
       return totals[key];
     })
-    .attr('transform', (d, i) => {
-      return "translate(" + (barWidth * i + usa_x - 40) + "," + usa_y + 30 + ")";
+    .attr("transform", (d, i) => {
+      return (
+        "translate(" + (barWidth * i + usa_x - 40) + "," + usa_y + 30 + ")"
+      );
     })
-    .append('rect')
-    .attr('width', barWidth)
-    .attr('height', d => {
-      let key = Object.keys(d)[0]
+    .append("rect")
+    .attr("width", barWidth)
+    .attr("height", d => {
+      let key = Object.keys(d)[0];
       return d[key][0] * totals[key] / 100000;
     })
-    .attr('y', d => {
-      let key = Object.keys(d)[0]
+    .attr("y", d => {
+      let key = Object.keys(d)[0];
       return -1 * d[key][0] * totals[key] / 100000;
     })
-    .attr('fill', 'blue');
+    .attr("fill", "blue");
 
   bars.on("mouseover", function(d, i) {
     let mouse = d3.mouse(countries.node()).map(d => {
       return parseInt(d);
     });
-    console.log("hovering", (mouse[0] + offsetL), (mouse[1] + offsetT), isoCountries.getName(Object.keys(d)[0], "en"), tooltip);
-    tooltip.classed("hidden", false)
-      .attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
-      .html(isoCountries.getName(Object.keys(d)[0], "en"))
-  })
+    console.log(
+      "hovering",
+      mouse[0] + offsetL,
+      mouse[1] + offsetT,
+      isoCountries.getName(Object.keys(d)[0], "en"),
+      tooltip
+    );
+    tooltip
+      .classed("hidden", false)
+      .attr(
+        "style",
+        "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px"
+      )
+      .html(isoCountries.getName(Object.keys(d)[0], "en"));
+  });
   bars.on("mouseout", function(d, i) {
     tooltip.classed("hidden", true);
   });
